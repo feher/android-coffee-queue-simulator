@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_view__engineer_working"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@mipmap/engineer_working"
+        android:focusableInTouchMode="false" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_view__engineer_busy"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/image_view__engineer_working"
+        android:layout_toEndOf="@+id/image_view__engineer_working"
+        android:src="@mipmap/engineer_not_busy" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar__engineer_need_cofee"
+        android:layout_below="@+id/image_view__engineer_working"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/image_view__engineer_busy"
+        android:layout_alignEnd="@+id/image_view__engineer_busy" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar__engineer_busy"
+        android:layout_below="@+id/progress_bar__engineer_need_cofee"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/image_view__engineer_busy"
+        android:layout_alignEnd="@+id/image_view__engineer_busy" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view__engineer_dummy"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/image_view__engineer_busy"
+        android:layout_toEndOf="@+id/image_view__engineer_busy"
+        android:visibility="invisible" />
+
+</RelativeLayout>
