@@ -54,10 +54,10 @@ public class MainActivity extends ActionBarActivity {
         simulationActivityIntent.putExtra(Common.SIMULATION_REAL_SECONDS_PER_STEP, (float)0.01);
         simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_SECONDS_PER_STEP, 1);
         simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_COUNT, 30);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_PROBABILITY, 30);
+        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_PROBABILITY, 50);
         simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_CHECK_SECONDS, 60 * 10);
         simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_SECONDS, 60 * 10);
-        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_NEED_COFFEE, 60 * 60);
+        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_NEED_COFFEE, 60 * 10);
         simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_COFFEE_READY, 30);
         simulationActivityIntent.putExtra(Common.SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY, 30);
         startActivity(simulationActivityIntent);

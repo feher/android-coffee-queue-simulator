@@ -36,19 +36,12 @@ public class CoffeeMachine implements Cloneable {
     }
 
     private void reportStateChange() {
-        String state;
-        if (isIdle()) {
-            state = "I";
-        } else if (isCoffeeReady()) {
-            state = "R";
-        } else {
-            state = "B";
-        }
         int progress =
                 Math.round(
                         (float)(mSimulationParameters.stepsUntilCoffeeReady - mStepsRemainingUntilReady)
-                        * 100 / mSimulationParameters.stepsUntilCoffeeReady);
-        mProgressReporter.reportStateChange(Common.STATE_CHANGE_COFFEE_MACHINE + state + progress);
+                                * 100 / mSimulationParameters.stepsUntilCoffeeReady);
+        CoffeeMachineState state = new CoffeeMachineState(!isIdle(), isCoffeeReady(), progress);
+        mProgressReporter.reportStateChange(state);
     }
 
     public void doOneStep() {

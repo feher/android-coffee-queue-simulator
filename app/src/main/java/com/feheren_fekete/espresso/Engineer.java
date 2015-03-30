@@ -100,20 +100,17 @@ public class Engineer implements Cloneable {
     }
 
     private void reportStateChange() {
-        String busy = isBusy() ? "B" : "N";
         int busyProgress =
                 Math.round(
-                        (float)(mSimulationParameters.busySteps - mBusySteps) * 100 / mSimulationParameters.busySteps);
-        String working = isWorking() ? "W" : "C";
+                        (float)(mSimulationParameters.busySteps - mBusySteps)
+                                * 100 / mSimulationParameters.busySteps);
         int needCoffeeProgress =
                 Math.round(
-                        (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee) * 100
-                        / mSimulationParameters.stepsUntilNeedCoffee);
-        mProgressReporter.reportStateChange(
-                Common.STATE_CHANGE_ENGINEER
-                + getId() + "|"
-                + busy + busyProgress + "|"
-                + working + needCoffeeProgress);
+                        (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
+                                * 100 / mSimulationParameters.stepsUntilNeedCoffee);
+        EngineerState state =
+                new EngineerState(getId(), isBusy(), isWorking(), busyProgress, needCoffeeProgress);
+        mProgressReporter.reportStateChange(state);
     }
 
     public void doOneStep(CoffeeMachine coffeeMachine,

@@ -46,10 +46,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text_view__engineer_dummy"
+        android:id="@+id/text_view__engineer_state"
+        android:visibility="visible"
+        android:text="Johnny Cash"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/image_view__engineer_busy"
-        android:layout_toEndOf="@+id/image_view__engineer_busy"
-        android:visibility="invisible" />
+        android:layout_toRightOf="@+id/progress_bar__engineer_need_cofee"
+        android:layout_toEndOf="@+id/progress_bar__engineer_need_cofee" />
 
 </RelativeLayout>
