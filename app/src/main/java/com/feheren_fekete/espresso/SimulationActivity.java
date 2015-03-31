@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SimulationActivity
@@ -120,7 +121,13 @@ public class SimulationActivity
     }
 
     @Override
-    public void onSimulationStateChange(Object state) {
+    public void onSimulationStateChange(List<Object> states) {
+        for (Object state : states) {
+            handleStateChange(state);
+        }
+    }
+
+    private void handleStateChange(Object state) {
         if (state instanceof CoffeeMachineState) {
             updateCoffeeMachineState((CoffeeMachineState) state);
         } else if (state instanceof EngineerState) {

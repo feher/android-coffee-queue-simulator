@@ -1,5 +1,7 @@
 package com.feheren_fekete.espresso;
 
+import java.util.List;
+
 public interface SimulationStateChangeHandler {
-    public void onSimulationStateChange(Object state);
+    public void onSimulationStateChange(List<Object> states);
 }
