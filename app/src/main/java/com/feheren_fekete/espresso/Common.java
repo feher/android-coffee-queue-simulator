@@ -13,11 +13,6 @@ public class Common {
     public static final String SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY = "SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY";
     public static final String SIMULATION_BUSY_CHECK_SECONDS = "SIMULATION_BUSY_CHECK_SECONDS";
 
-    public static final String STATE_CHANGE_COFFEE_MACHINE = "CoffeeMachine:";
-    public static final String STATE_CHANGE_ENGINEER = "Engineer:";
-
-    public static final String LOG_TAG = "Espresso";
-
     public static final Random random = new Random();
 
     /**
