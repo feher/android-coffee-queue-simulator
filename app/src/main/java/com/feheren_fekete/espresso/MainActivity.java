@@ -17,48 +17,23 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void onButtonClickedStartSimulation(View view) {
-        EditText numberOfEngineersView = (EditText)findViewById(R.id.edit_text_number_of_engineers);
-        int numberOfEngineers = Integer.parseInt(numberOfEngineersView.getText().toString());
-
-        EditText superBusyProbabilityView = (EditText)findViewById(R.id.edit_text_super_busy_probability);
-        int superBusyProbability = Integer.parseInt(superBusyProbabilityView.getText().toString());
-
-        EditText superBusyTimeView = (EditText)findViewById(R.id.edit_text_super_busy_time);
-        int superBusyTime = Integer.parseInt(superBusyTimeView.getText().toString());
+        int engineerCount = Integer.parseInt(((EditText)findViewById(R.id.edit_text__engineer_count)).getText().toString());
+        int busyProbability = Integer.parseInt(((EditText)findViewById(R.id.edit_text__busy_probability)).getText().toString());
+        int busyCheckSeconds = Integer.parseInt(((EditText)findViewById(R.id.edit_text__busy_check_seconds)).getText().toString());
+        int busySeconds = Integer.parseInt(((EditText)findViewById(R.id.edit_text__busy_seconds)).getText().toString());
+        int secondsUntilNeedCoffee = Integer.parseInt(((EditText)findViewById(R.id.edit_text__seconds_until_need_coffee)).getText().toString());
+        int secondsUntilCoffeeReady = Integer.parseInt(((EditText)findViewById(R.id.edit_text__seconds_until_coffee_ready)).getText().toString());
 
         Intent simulationActivityIntent = new Intent(this, SimulationActivity.class);
         simulationActivityIntent.putExtra(Common.SIMULATION_REAL_SECONDS_PER_STEP, (float)0.01);
         simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_SECONDS_PER_STEP, 1);
-        simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_COUNT, 30);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_PROBABILITY, 50);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_CHECK_SECONDS, 60 * 10);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_SECONDS, 60 * 10);
-        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_NEED_COFFEE, 60 * 10);
-        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_COFFEE_READY, 30);
+        simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_COUNT, engineerCount);
+        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_PROBABILITY, busyProbability);
+        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_CHECK_SECONDS, busyCheckSeconds);
+        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_SECONDS, busySeconds);
+        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_NEED_COFFEE, secondsUntilNeedCoffee);
+        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_COFFEE_READY, secondsUntilCoffeeReady);
         simulationActivityIntent.putExtra(Common.SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY, 30);
         startActivity(simulationActivityIntent);
     }

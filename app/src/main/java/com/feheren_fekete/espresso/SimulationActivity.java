@@ -3,6 +3,7 @@ package com.feheren_fekete.espresso;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class SimulationActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("Foo", "xxxxxxxxxxxxxxxxxxxxx Creating");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simulation);
 
@@ -97,6 +99,7 @@ public class SimulationActivity
 
     @Override
     protected void onDestroy() {
+        Log.d("Foo", "xxxxxxxxxxxxxxxxxxxxx Destroyinh");
         mSimulationTask.cancel(true);
         super.onDestroy();
     }
@@ -114,13 +117,6 @@ public class SimulationActivity
         EngineerListAdapter engineerListAdapter =
                 new EngineerListAdapter(this, new ArrayList<EngineerState>());
         mCoffeeQueueListView.setAdapter(engineerListAdapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_simulation, menu);
-        return true;
     }
 
     @Override
