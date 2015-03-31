@@ -14,21 +14,21 @@ public class Simulation {
         mStep = 0;
         mParameters = parameters;
         mCoffeeMachine = new CoffeeMachine(parameters, reporter);
-        mCoffeeQueue = new CoffeeQueue();
+        mCoffeeQueue = new CoffeeQueue(reporter);
         mEngineers = new ArrayList<Engineer>();
         mEngineersCopy = null;
         for (int i = 0; i < mParameters.engineerCount; ++i) {
-            Engineer engineer = Engineer.make(i, parameters, reporter);
+            Engineer engineer = new Engineer(i, parameters, reporter);
             mEngineers.add(engineer);
         }
     }
 
     public void doOneStep() {
-        CoffeeMachine coffeeMachineCopy = (CoffeeMachine)mCoffeeMachine.clone();
-        CoffeeQueue coffeeQueueCopy = (CoffeeQueue)mCoffeeQueue.clone();
+        CoffeeMachine coffeeMachineCopy = new CoffeeMachine(mCoffeeMachine);
+        CoffeeQueue coffeeQueueCopy = new CoffeeQueue(mCoffeeQueue);
         mEngineersCopy = new ArrayList<Engineer>();
         for (Engineer engineer : mEngineers) {
-            Engineer engineerCopy = (Engineer) engineer.clone();
+            Engineer engineerCopy = new Engineer(engineer);
             mEngineersCopy.add(engineerCopy);
         }
 

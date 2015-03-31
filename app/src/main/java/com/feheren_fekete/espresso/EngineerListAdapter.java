@@ -9,13 +9,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
     private final Context mContext;
-    private final ArrayList<EngineerState> mEngineerStates;
+    private ArrayList<EngineerState> mEngineerStates;
 
     public EngineerListAdapter(Context context, ArrayList<EngineerState> engineerStates) {
         super(context, R.layout.layout_engineer, R.id.text_view__engineer_state, engineerStates);
@@ -40,29 +40,37 @@ public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
         ProgressBar needCoffeeProgress  = (ProgressBar) rowView.findViewById(R.id.progress_bar__engineer_need_cofee);
 
         stateText.setText(engineerState.toString());
-        busyImage.setImageResource(engineerState.isBusy ? R.mipmap.engineer_busy : R.mipmap.engineer_not_busy);
-        workingImage.setImageResource(engineerState.isWorking ? R.mipmap.engineer_working : R.mipmap.engineer_queuing);
-        busyProgress.setProgress(engineerState.busyProgress);
-        needCoffeeProgress.setProgress(engineerState.needCoffeeProgress);
+        busyImage.setImageResource(engineerState.isBusy() ? R.mipmap.engineer_busy : R.mipmap.engineer_not_busy);
+        workingImage.setImageResource(engineerState.isWorking() ? R.mipmap.engineer_working : R.mipmap.engineer_queuing);
+        busyProgress.setProgress(engineerState.getBusyProgress());
+        needCoffeeProgress.setProgress(engineerState.getNeedCoffeeProgress());
 
         return rowView;
     }
 
-    public void addToQueue(EngineerState engineerState) {
-        mEngineerStates.add(engineerState);
-        //add(engineerState);
+    public EngineerState getEngineerState(int engineerId) {
+        for (EngineerState state : mEngineerStates) {
+            if (state.getId() == engineerId) {
+                return state;
+            }
+        }
+        throw new NoSuchElementException("Id " + engineerId + " not found!");
+    }
+
+    public void setEngineerStates(ArrayList<EngineerState> engineerStates) {
+        mEngineerStates = engineerStates;
+
+        clear();
+        for (EngineerState state : engineerStates) {
+            add(state);
+        }
+
         notifyDataSetChanged();
     }
 
-    public void removeFromQueue(EngineerState engineerState) {
-        mEngineerStates.remove(engineerState);
-        //remove(engineerState);
-        notifyDataSetChanged();
-    }
-
-    public void updateState(EngineerState engineerState) {
+    public void updateEngineerState(EngineerState engineerState) {
         for (int i = 0; i < mEngineerStates.size(); ++i) {
-            if (mEngineerStates.get(i).id == engineerState.id) {
+            if (mEngineerStates.get(i).getId() == engineerState.getId()) {
                 mEngineerStates.set(i, engineerState);
                 notifyDataSetChanged();
                 return;

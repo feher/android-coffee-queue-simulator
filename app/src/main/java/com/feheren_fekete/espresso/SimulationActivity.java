@@ -10,10 +10,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SimulationActivity
-        extends ActionBarActivity {
+        extends ActionBarActivity
+        implements SimulationStateChangeHandler {
 
     private static final String MESSAGE_LOG = "Log:";
     private static final String MESSAGE_STATE_CHANGE = "State Change:";
@@ -62,7 +64,7 @@ public class SimulationActivity
                             secondsUntilNeedCoffee,
                             secondsUntilCoffeeReady,
                             maxQueueLengthWhenBusy);
-            SimulationAsyncTask simulationAsyncTask = new SimulationAsyncTask();
+            SimulationAsyncTask simulationAsyncTask = new SimulationAsyncTask(this);
             simulationAsyncTask.execute(parameters);
         }
     }
@@ -89,11 +91,75 @@ public class SimulationActivity
         return true;
     }
 
-    private class SimulationAsyncTask
+    @Override
+    public void onSimulationStateChange(Object state) {
+        if (state instanceof String) {
+            updateLog(((String) state).substring(MESSAGE_LOG.length()));
+        } else if (state instanceof CoffeeMachineState) {
+            updateCoffeeMachineState((CoffeeMachineState) state);
+        } else if (state instanceof EngineerState) {
+            updateEngineerState((EngineerState) state);
+        } else if (state instanceof CoffeeQueueState) {
+            updateCoffeeQueueState((CoffeeQueueState) state);
+        } else {
+            throw new ClassCastException("Unknown simulation state!");
+        }
+    }
+
+    private void updateLog(String logMessage) {
+//            String state = progress[0];
+//            CharSequence log = mStateLog.getText();
+//            if (log.length() > 1024*1024*512) {
+//                log = log.subSequence(0, log.length() - state.length());
+//            }
+//            log = state + log;
+//            mStateLog.setText(log);
+    }
+
+    private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {
+        if (coffeeMachineState.isBrewing()) {
+            mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_brewing);
+            mCoffeeMachineState.setText("Brewing coffee...");
+        } else if (coffeeMachineState.isCoffeeReady()) {
+            mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_ready);
+            mCoffeeMachineState.setText("Coffee is ready");
+        } else {
+            mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_idle);
+            mCoffeeMachineState.setText("Coffee machine is idle");
+        }
+        mCoffeeMachineProgressBar.setProgress(coffeeMachineState.getBrewingProgress());
+    }
+
+    private void updateEngineerState(EngineerState engineerState) {
+        EngineerListAdapter engineersAdapter = (EngineerListAdapter)mEngineersListView.getAdapter();
+        engineersAdapter.updateEngineerState(engineerState);
+
+        EngineerListAdapter queueAdapter = (EngineerListAdapter)mCoffeeQueueListView.getAdapter();
+        queueAdapter.updateEngineerState(engineerState);
+    }
+
+    private void updateCoffeeQueueState(CoffeeQueueState coffeeQueueState) {
+        EngineerListAdapter engineersAdapter = (EngineerListAdapter)mEngineersListView.getAdapter();
+        EngineerListAdapter queueAdapter = (EngineerListAdapter)mCoffeeQueueListView.getAdapter();
+
+        ArrayList<EngineerState> queuingEngineerStates = new ArrayList<EngineerState>();
+        for (Integer engineerId : coffeeQueueState.getEngineerIds()) {
+            queuingEngineerStates.add(engineersAdapter.getEngineerState(engineerId));
+        }
+
+        queueAdapter.setEngineerStates(queuingEngineerStates);
+    }
+
+    private static class SimulationAsyncTask
             extends AsyncTask<SimulationParameters, Object, Void>
             implements ProgressReporter {
 
         private Simulation mSimulation = null;
+        private SimulationStateChangeHandler mStateChangeHandler;
+
+        public SimulationAsyncTask(SimulationStateChangeHandler stateChangeHandler) {
+            mStateChangeHandler = stateChangeHandler;
+        }
 
         @Override
         protected Void doInBackground(SimulationParameters... params) {
@@ -118,59 +184,9 @@ public class SimulationActivity
 
         @Override
         protected void onProgressUpdate(Object... progress) {
-            Object message = progress[0];
-            if (message instanceof String) {
-                updateLog(((String) message).substring(MESSAGE_LOG.length()));
-            } else if (message instanceof CoffeeMachineState) {
-                updateCoffeeMachineState((CoffeeMachineState) message);
-            } else if (message instanceof EngineerState) {
-                updateEngineerState((EngineerState)message);
-            }
+            Object state = progress[0];
+            mStateChangeHandler.onSimulationStateChange(state);
         }
-
-        private void updateLog(String logMessage) {
-//            String state = progress[0];
-//            CharSequence log = mStateLog.getText();
-//            if (log.length() > 1024*1024*512) {
-//                log = log.subSequence(0, log.length() - state.length());
-//            }
-//            log = state + log;
-//            mStateLog.setText(log);
-        }
-
-        private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {
-            if (coffeeMachineState.isBrewing) {
-                mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_brewing);
-                mCoffeeMachineState.setText("Brewing coffee...");
-            } else if (coffeeMachineState.isCoffeeReady) {
-                mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_ready);
-                mCoffeeMachineState.setText("Coffee is ready");
-            } else {
-                mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_idle);
-                mCoffeeMachineState.setText("Coffee machine is idle");
-            }
-            mCoffeeMachineProgressBar.setProgress(coffeeMachineState.brewingProgress);
-        }
-
-        private void updateEngineerState(EngineerState engineerState) {
-            EngineerListAdapter adapter = (EngineerListAdapter)mEngineersListView.getAdapter();
-            EngineerListAdapter queueAdapter = (EngineerListAdapter)mCoffeeQueueListView.getAdapter();
-
-            EngineerState oldState = adapter.getItem(engineerState.id);
-            boolean isGoingForCoffee = oldState.isWorking && !engineerState.isWorking;
-            boolean isGoingToWork = !oldState.isWorking && engineerState.isWorking;
-            if (isGoingForCoffee) {
-                queueAdapter.addToQueue(engineerState);
-            } else if (isGoingToWork) {
-                queueAdapter.removeFromQueue(oldState);
-            } else if (!oldState.isWorking) {
-                queueAdapter.updateState(engineerState);
-            }
-
-            // Do this last!
-            adapter.updateState(engineerState);
-        }
-
     }
 
 }

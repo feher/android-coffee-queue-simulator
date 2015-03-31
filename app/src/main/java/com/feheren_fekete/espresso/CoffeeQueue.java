@@ -1,83 +1,71 @@
 package com.feheren_fekete.espresso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CoffeeQueue implements Cloneable {
+public class CoffeeQueue {
 
-    private class QueueItem {
-        public final int engineerId;
-        public boolean isBusy;
-        public QueueItem(int engineerId, boolean isBusy) {
-            this.engineerId = engineerId;
-            this.isBusy = isBusy;
-        }
+    private final ProgressReporter mProgressReporter;
+    private final List<Integer> mBusyQueue;
+    private final List<Integer> mNormalQueue;
+
+    public CoffeeQueue(ProgressReporter reporter) {
+        mBusyQueue = new ArrayList<Integer>();
+        mNormalQueue = new ArrayList<Integer>();
+        mProgressReporter = reporter;
     }
 
-    private ArrayList<QueueItem> mQueue;
-
-    public CoffeeQueue() {
-        mQueue = new ArrayList<QueueItem>();
-    }
-
-    @Override
-    public Object clone() {
-        CoffeeQueue coffeeQueue = new CoffeeQueue();
-        for (QueueItem item : mQueue) {
-            coffeeQueue.mQueue.add(new QueueItem(item.engineerId, item.isBusy));
-        }
-        return coffeeQueue;
+    public CoffeeQueue(CoffeeQueue other) {
+        mBusyQueue = new ArrayList<Integer>(other.mBusyQueue);
+        mNormalQueue = new ArrayList<Integer>(other.mNormalQueue);
+        mProgressReporter = other.mProgressReporter;
     }
 
     public Integer next() {
-        if (mQueue.isEmpty()) {
-            return null;
+        if (!mBusyQueue.isEmpty()) {
+            return mBusyQueue.get(0);
         }
-        for (QueueItem item : mQueue) {
-            if (item.isBusy) {
-                return item.engineerId;
+        if (!mNormalQueue.isEmpty()) {
+            return mNormalQueue.get(0);
+        }
+        return null;
+    }
+
+    private void reportStateChange() {
+        mProgressReporter.reportStateChange(new CoffeeQueueState(getIds()));
+    }
+
+    private void addToQueue(List<Integer> queue, int engineerId) {
+        for (Integer id : queue) {
+            if (id == engineerId) {
+                return;
             }
         }
-        return mQueue.get(0).engineerId;
+        queue.add(engineerId);
     }
 
     public void add(int engineerId, boolean isBusy) {
-        for (QueueItem item : mQueue) {
-            if (item.engineerId == engineerId) {
-                item.isBusy = isBusy;
-                return;
-            }
+        if (isBusy) {
+            addToQueue(mBusyQueue, engineerId);
+        } else {
+            addToQueue(mNormalQueue, engineerId);
         }
-        mQueue.add(new QueueItem(engineerId, isBusy));
-    }
-
-    public void update(int engineerId, boolean isBusy) {
-        for (QueueItem item : mQueue) {
-            if (item.engineerId == engineerId) {
-                item.isBusy = isBusy;
-                return;
-            }
-        }
-        throw new RuntimeException("Id not found in queue: " + engineerId);
+        reportStateChange();
     }
 
     public void remove(int engineerId) {
-        for (QueueItem item : mQueue) {
-            if (item.engineerId == engineerId) {
-                mQueue.remove(item);
-                return;
-            }
-        }
+        mBusyQueue.remove(new Integer(engineerId));
+        mNormalQueue.remove(new Integer(engineerId));
+        reportStateChange();
     }
 
-    public ArrayList<Integer> getIds() {
-        ArrayList<Integer> ids = new ArrayList<Integer>();
-        for (QueueItem item : mQueue) {
-            ids.add(item.engineerId);
-        }
+    public List<Integer> getIds() {
+        List<Integer> ids = new ArrayList<Integer>(mBusyQueue);
+        ids.addAll(mNormalQueue);
         return ids;
     }
 
     public int getLength() {
-        return mQueue.size();
+        return mBusyQueue.size() + mNormalQueue.size();
     }
 }

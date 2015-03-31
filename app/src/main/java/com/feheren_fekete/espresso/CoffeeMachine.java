@@ -1,6 +1,6 @@
 package com.feheren_fekete.espresso;
 
-public class CoffeeMachine implements Cloneable {
+public class CoffeeMachine {
 
     private SimulationParameters mSimulationParameters;
     private ProgressReporter mProgressReporter;
@@ -16,23 +16,12 @@ public class CoffeeMachine implements Cloneable {
         mStepsRemainingUntilReady = 0;
     }
 
-    private CoffeeMachine() {
-        mSimulationParameters = null;
-        mProgressReporter = null;
-        mIsIdle = true;
-        mIsCoffeeReady = false;
-        mStepsRemainingUntilReady = 0;
-    }
-
-    @Override
-    public Object clone() {
-        CoffeeMachine c = new CoffeeMachine();
-        c.mIsIdle = mIsIdle;
-        c.mIsCoffeeReady = mIsCoffeeReady;
-        c.mStepsRemainingUntilReady = mStepsRemainingUntilReady;
-        c.mProgressReporter = mProgressReporter;
-        c.mSimulationParameters = mSimulationParameters;
-        return c;
+    public CoffeeMachine(CoffeeMachine other) {
+        mIsIdle = other.mIsIdle;
+        mIsCoffeeReady = other.mIsCoffeeReady;
+        mStepsRemainingUntilReady = other.mStepsRemainingUntilReady;
+        mProgressReporter = other.mProgressReporter;
+        mSimulationParameters = other.mSimulationParameters;
     }
 
     private void reportStateChange() {

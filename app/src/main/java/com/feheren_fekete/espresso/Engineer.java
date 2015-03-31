@@ -2,7 +2,7 @@ package com.feheren_fekete.espresso;
 
 import java.util.Random;
 
-public class Engineer implements Cloneable {
+public class Engineer {
     public static final char STATE_TEXT_BUSY = 'B';
     public static final char STATE_TEXT_NOT_BUSY = 'N';
     public static final char STATE_TEXT_WORKING = 'W';
@@ -18,46 +18,30 @@ public class Engineer implements Cloneable {
     private int mBusyCheckSteps;
     private int mStepsUntilNeedCoffee;
 
-    private Engineer() {
-        mSimulationParameters = null;
-        mProgressReporter = null;
-        mId = -1;
+    public Engineer(int id, SimulationParameters parameters, ProgressReporter reporter) {
+        mSimulationParameters = parameters;
+        mProgressReporter = reporter;
+        mId = id;
         mIsWorking = true;
         mIsBusy = false;
         mBusySteps = 0;
         mBusyCheckSteps = 0;
-        mStepsUntilNeedCoffee = 0;
-    }
-
-    public static Engineer make(int id, SimulationParameters parameters, ProgressReporter reporter) {
-        Engineer e = new Engineer();
-        e.mSimulationParameters = parameters;
-        e.mProgressReporter = reporter;
-        e.mId = id;
-        e.mIsWorking = true;
-        e.mIsBusy = false;
-        e.mBusySteps = 0;
-        e.mBusyCheckSteps = 0;
-        e.mStepsUntilNeedCoffee = Math.round(Common.random.nextFloat() * parameters.stepsUntilNeedCoffee);
+        mStepsUntilNeedCoffee = Math.round(Common.random.nextFloat() * parameters.stepsUntilNeedCoffee);
         if (Common.eventHappens(parameters.busyProb)) {
-            e.mIsBusy = true;
-            e.mBusySteps = parameters.busySteps;
+            mIsBusy = true;
+            mBusySteps = parameters.busySteps;
         }
-        return e;
     }
 
-    @Override
-    public Object clone() {
-        Engineer e = new Engineer();
-        e.mSimulationParameters = mSimulationParameters;
-        e.mProgressReporter = mProgressReporter;
-        e.mId = mId;
-        e.mIsWorking = mIsWorking;
-        e.mIsBusy = mIsBusy;
-        e.mBusySteps = mBusySteps;
-        e.mBusyCheckSteps = mBusyCheckSteps;
-        e.mStepsUntilNeedCoffee = mStepsUntilNeedCoffee;
-        return e;
+    public Engineer(Engineer other) {
+        mSimulationParameters = other.mSimulationParameters;
+        mProgressReporter = other.mProgressReporter;
+        mId = other.mId;
+        mIsWorking = other.mIsWorking;
+        mIsBusy = other.mIsBusy;
+        mBusySteps = other.mBusySteps;
+        mBusyCheckSteps = other.mBusyCheckSteps;
+        mStepsUntilNeedCoffee = other.mStepsUntilNeedCoffee;
     }
 
     public int getId() {
@@ -69,10 +53,12 @@ public class Engineer implements Cloneable {
     }
 
     private void setBusy(CoffeeQueue coffeeQueue, boolean isBusy) {
+        assert mIsBusy != isBusy;
         mIsBusy = isBusy;
         mBusySteps = mSimulationParameters.busySteps;
         if (isQueuing()) {
-            coffeeQueue.update(mId, mIsBusy);
+            coffeeQueue.remove(mId);
+            coffeeQueue.add(mId, mIsBusy);
         }
     }
 

@@ -1,13 +1,25 @@
 package com.feheren_fekete.espresso;
 
 public class CoffeeMachineState {
-    public final boolean isBrewing;
-    public final boolean isCoffeeReady;
-    public final int brewingProgress;
+    private final boolean mIsBrewing;
+    private final boolean mIsCoffeeReady;
+    private final int mBrewingProgress;
 
     public CoffeeMachineState(boolean isBrewing, boolean isCoffeeReady, int brewingProgress) {
-        this.isBrewing = isBrewing;
-        this.isCoffeeReady = isCoffeeReady;
-        this.brewingProgress = brewingProgress;
+        mIsBrewing = isBrewing;
+        mIsCoffeeReady = isCoffeeReady;
+        mBrewingProgress = brewingProgress;
+    }
+
+    public boolean isBrewing() {
+        return mIsBrewing;
+    }
+
+    public boolean isCoffeeReady() {
+        return mIsCoffeeReady;
+    }
+
+    public int getBrewingProgress() {
+        return mBrewingProgress;
     }
 }

@@ -1,25 +1,45 @@
 package com.feheren_fekete.espresso;
 
 public class EngineerState {
-    public final int id;
-    public final boolean isBusy;
-    public final boolean isWorking;
-    public final int busyProgress;
-    public final int needCoffeeProgress;
+    private final int mId;
+    private final boolean mIsBusy;
+    private final boolean mIsWorking;
+    private final int mBusyProgress;
+    private final int mNeedCoffeeProgress;
 
     public EngineerState(int id, boolean isBusy, boolean isWorking, int busyProgress, int needCoffeeProgress) {
-        this.id = id;
-        this.isBusy = isBusy;
-        this.isWorking = isWorking;
-        this.busyProgress = busyProgress;
-        this.needCoffeeProgress = needCoffeeProgress;
+        mId = id;
+        mIsBusy = isBusy;
+        mIsWorking = isWorking;
+        mBusyProgress = busyProgress;
+        mNeedCoffeeProgress = needCoffeeProgress;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public boolean isBusy() {
+        return mIsBusy;
+    }
+
+    public boolean isWorking() {
+        return mIsWorking;
+    }
+
+    public int getBusyProgress() {
+        return mBusyProgress;
+    }
+
+    public int getNeedCoffeeProgress() {
+        return mNeedCoffeeProgress;
     }
 
     @Override
     public String toString() {
-        String place = isWorking ? "Working" : "Queuing for coffee";
-        String business = isBusy ? "Busy" : "Not busy";
+        String place = mIsWorking ? "Working" : "Queuing for coffee";
+        String business = mIsBusy ? "Busy" : "Not busy";
 
-        return "Id: " + id + "\n" + place + "\n" + business;
+        return "Id: " + mId + "\n" + place + "\n" + business;
     }
 }
