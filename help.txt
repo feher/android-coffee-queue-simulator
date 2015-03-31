@@ -1,0 +1,28 @@
+This is a simulation of an office where engineers work.
+Every engineer needs some coffee from time-to-time to keep up the good work.
+There is only one coffee machine so, the negineers must stand in a queue.
+Engineers are sometimes busy. Busy engineers can jump the queue but they cannot take over other busy guys.
+
+Icon description:
+Engineer busy, 
+Engineer working:
+
+
+The "seconds" that are input to the simulation are "engineer seconds", not real seconds.
+The simulation is done in discrete steps.
+1 simulation step _takes_ a pre-defined number of real seconds.
+1 simulation step _means_ a calculated number of "engineer seconds".
+The simulation is done so that the progress bars in the UI do not take more than 5 seconds.
+
+Number of engineers: The number of engineers in the office.
+
+Probability that engineer becomes busy: Percentage between 1 and 100.
+
+Re-evaluate busy status every N seconds: An engineer can become busy only at every N seconds.
+
+Engineer stays busy for N seconds: An engineer stays busy for the given seconds.
+
+Engineer needs coffee every N seconds: An engineer goes for coffee every given N seconds.
+
+Coffee machine makes the coffee in N seconds: It takes N seconds for the coffe machine to prepare one cup of coffee.
+

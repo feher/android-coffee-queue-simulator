@@ -17,6 +17,26 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_help) {
+            Intent helpActivityIntent = new Intent(this, HelpActivity.class);
+            startActivity(helpActivityIntent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onButtonClickedStartSimulation(View view) {
         // 1 simulation step _takes_ realSecondsPerStep real seconds.
         // 1 simulation step _means_ engineerSecondsPerStep engineer-seconds.
