@@ -4,32 +4,37 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SimulationActivity
         extends ActionBarActivity
         implements SimulationStateChangeHandler {
 
+    private TextView mSimulationStateText;
     private ImageView mCoffeeMachineImage;
-    private TextView mCoffeeMachineState;
+    private TextView mCoffeeMachineStateText;
     private ProgressBar mCoffeeMachineProgressBar;
     private ListView mEngineersListView;
     private ListView mCoffeeQueueListView;
+    private Button mPauseButton;
+    private SimulationTask mSimulationTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simulation);
 
-        mCoffeeMachineImage = (ImageView) findViewById(R.id.image_view__coffee_machine_state);
-        mCoffeeMachineState = (TextView) findViewById(R.id.text_view__coffee_machine);
+        mSimulationStateText = (TextView) findViewById(R.id.text_view__simulation_state);
+        mCoffeeMachineImage = (ImageView) findViewById(R.id.image_view__coffee_machine);
+        mCoffeeMachineStateText = (TextView) findViewById(R.id.text_view__coffee_machine);
         mCoffeeMachineProgressBar = (ProgressBar) findViewById(R.id.progress_bar__coffee_machine);
 
         mEngineersListView = (ListView) findViewById(R.id.list_view__engineers);
@@ -61,9 +66,39 @@ public class SimulationActivity
                             secondsUntilNeedCoffee,
                             secondsUntilCoffeeReady,
                             maxQueueLengthWhenBusy);
-            SimulationTask simulationAsyncTask = new SimulationTask(this);
-            simulationAsyncTask.execute(parameters);
+            mSimulationTask = new SimulationTask(this);
+            mSimulationTask.execute(parameters);
+
+            mPauseButton = (Button) findViewById(R.id.button__pause);
+            mPauseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onPauseButtonClick();
+                }
+            });
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (!mSimulationTask.isTaskPaused()) {
+            pauseSimulation();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSimulationTask.isTaskPaused()) {
+            resumeSimulation();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mSimulationTask.cancel(true);
+        super.onDestroy();
     }
 
     private void createEngineerList(int engineerCount) {
@@ -101,16 +136,38 @@ public class SimulationActivity
         }
     }
 
+    private void onPauseButtonClick() {
+        if (mSimulationTask.getStatus() == AsyncTask.Status.RUNNING) {
+            if (mSimulationTask.isTaskPaused()) {
+                resumeSimulation();
+            } else {
+                pauseSimulation();
+            }
+        }
+    }
+
+    private void pauseSimulation() {
+        mSimulationTask.pauseTask();
+        mPauseButton.setText("Resume");
+        mSimulationStateText.setText("PAUSED");
+    }
+
+    private void resumeSimulation() {
+        mSimulationTask.resumeTask();
+        mPauseButton.setText("Pause");
+        mSimulationStateText.setText("Running...");
+    }
+
     private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {
         if (coffeeMachineState.isBrewing()) {
             mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_brewing);
-            mCoffeeMachineState.setText("Brewing coffee...");
+            mCoffeeMachineStateText.setText("Brewing coffee...");
         } else if (coffeeMachineState.isCoffeeReady()) {
             mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_ready);
-            mCoffeeMachineState.setText("Coffee is ready");
+            mCoffeeMachineStateText.setText("Coffee is ready");
         } else {
             mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_idle);
-            mCoffeeMachineState.setText("Coffee machine is idle");
+            mCoffeeMachineStateText.setText("Coffee machine is idle");
         }
         mCoffeeMachineProgressBar.setProgress(coffeeMachineState.getBrewingProgress());
     }
