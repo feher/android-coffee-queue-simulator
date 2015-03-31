@@ -1,19 +1,19 @@
 package com.feheren_fekete.espresso;
 
 public class SimulationParameters {
-    public final float realSecondsPerStep;
-    public final int engineerSecondsPerStep;
+    public final double realSecondsPerStep;
+    public final double engineerSecondsPerStep;
     public final int engineerCount;
     public final int busyProb;
-    public final int busySteps;
-    public final int stepsUntilNeedCoffee;
-    public final int stepsUntilCoffeeReady;
+    public final long busyCheckSteps;
+    public final long busySteps;
+    public final long stepsUntilNeedCoffee;
+    public final long stepsUntilCoffeeReady;
     public final int maxQueueLengthWhenBusy;
-    public final int busyCheckSteps;
 
     public SimulationParameters(
-                 float realSecondsPerStep,
-                 int engineerSecondsPerStep,
+                 double realSecondsPerStep,
+                 double engineerSecondsPerStep,
                  int engineerCount,
                  int busyProb,
                  int busyCheckSeconds,
@@ -25,10 +25,10 @@ public class SimulationParameters {
         this.engineerSecondsPerStep = engineerSecondsPerStep;
         this.engineerCount = engineerCount;
         this.busyProb = busyProb;
-        this.busySteps = Math.round((float)busySeconds / engineerSecondsPerStep);
-        this.stepsUntilNeedCoffee = Math.round((float)secondsUntilNeedCoffee / engineerSecondsPerStep);
-        this.stepsUntilCoffeeReady = Math.round((float)secondsUntilCoffeeReady / engineerSecondsPerStep);
+        this.busyCheckSteps = Math.round(busyCheckSeconds / engineerSecondsPerStep);
+        this.busySteps = Math.round(busySeconds / engineerSecondsPerStep);
+        this.stepsUntilNeedCoffee = Math.round(secondsUntilNeedCoffee / engineerSecondsPerStep);
+        this.stepsUntilCoffeeReady = Math.round(secondsUntilCoffeeReady / engineerSecondsPerStep);
         this.maxQueueLengthWhenBusy = maxQueueLengthWhenBusy;
-        this.busyCheckSteps = Math.round((float)busyCheckSeconds / engineerSecondsPerStep);
     }
 }

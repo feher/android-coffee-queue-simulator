@@ -6,7 +6,7 @@ public class CoffeeMachine {
     private ProgressReporter mProgressReporter;
     private boolean mIsIdle;
     private boolean mIsCoffeeReady;
-    private int mStepsRemainingUntilReady;
+    private long mStepsRemainingUntilReady;
 
     public CoffeeMachine(SimulationParameters parameters, ProgressReporter reporter) {
         mSimulationParameters = parameters;
@@ -69,18 +69,5 @@ public class CoffeeMachine {
         mIsCoffeeReady = false;
         mStepsRemainingUntilReady = mSimulationParameters.stepsUntilCoffeeReady;
         reportStateChange();
-    }
-
-    public String getStateText() {
-        String state;
-        if (mIsIdle) {
-            state = "idle ";
-            if (mIsCoffeeReady) {
-                state += ", coffee ready";
-            }
-        } else {
-            state = "brewing, ready in " + mStepsRemainingUntilReady + " steps";
-        }
-        return state;
     }
 }

@@ -49,8 +49,28 @@
         android:id="@+id/text_view__engineer_state"
         android:visibility="visible"
         android:text="Johnny Cash"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/text_view__engineer_working"
+        android:layout_alignLeft="@+id/text_view__engineer_working"
+        android:layout_alignStart="@+id/text_view__engineer_working" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Working"
+        android:id="@+id/text_view__engineer_working"
+        android:layout_above="@+id/progress_bar__engineer_busy"
         android:layout_toRightOf="@+id/progress_bar__engineer_need_cofee"
         android:layout_toEndOf="@+id/progress_bar__engineer_need_cofee" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Not busy"
+        android:id="@+id/text_view__engineer_busy"
+        android:layout_alignBottom="@+id/progress_bar__engineer_busy"
+        android:layout_toRightOf="@+id/progress_bar__engineer_busy"
+        android:layout_toEndOf="@+id/progress_bar__engineer_busy" />
 
 </RelativeLayout>

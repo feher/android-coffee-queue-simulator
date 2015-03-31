@@ -28,6 +28,8 @@ public class SimulationActivity
     private ListView mCoffeeQueueListView;
     private Button mPauseButton;
     private SimulationTask mSimulationTask;
+    private EngineerListAdapter mEngineerListAdapter;
+    private EngineerListAdapter mCoffeeQueueAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,8 @@ public class SimulationActivity
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            float realSecondsPerStep = extras.getFloat(Common.SIMULATION_REAL_SECONDS_PER_STEP);
-            int engineerSecondsPerStep = extras.getInt(Common.SIMULATION_ENGINEER_SECONDS_PER_STEP);
+            double realSecondsPerStep = extras.getDouble(Common.SIMULATION_REAL_SECONDS_PER_STEP);
+            double engineerSecondsPerStep = extras.getDouble(Common.SIMULATION_ENGINEER_SECONDS_PER_STEP);
             int engineerCount = extras.getInt(Common.SIMULATION_ENGINEER_COUNT);
             int busyProb = extras.getInt(Common.SIMULATION_BUSY_PROBABILITY);
             int busySeconds = extras.getInt(Common.SIMULATION_BUSY_SECONDS);
@@ -110,14 +112,13 @@ public class SimulationActivity
         for (int i = 0; i < engineerCount; ++i) {
             engineerList.add(new EngineerState(i, false, true, 0, 0));
         }
-        EngineerListAdapter engineerListAdapter = new EngineerListAdapter(this, engineerList);
-        mEngineersListView.setAdapter(engineerListAdapter);
+        mEngineerListAdapter = new EngineerListAdapter(this, engineerList);
+        mEngineersListView.setAdapter(mEngineerListAdapter);
     }
 
     private void createCoffeeQueueList() {
-        EngineerListAdapter engineerListAdapter =
-                new EngineerListAdapter(this, new ArrayList<EngineerState>());
-        mCoffeeQueueListView.setAdapter(engineerListAdapter);
+        mCoffeeQueueAdapter = new EngineerListAdapter(this, new ArrayList<EngineerState>());
+        mCoffeeQueueListView.setAdapter(mCoffeeQueueAdapter);
     }
 
     @Override
@@ -125,6 +126,8 @@ public class SimulationActivity
         for (Object state : states) {
             handleStateChange(state);
         }
+        mEngineerListAdapter.notifyUpdates();
+        mCoffeeQueueAdapter.notifyUpdates();
     }
 
     private void handleStateChange(Object state) {
@@ -164,34 +167,28 @@ public class SimulationActivity
     private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {
         if (coffeeMachineState.isBrewing()) {
             mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_brewing);
-            mCoffeeMachineStateText.setText("Brewing coffee...");
+            mCoffeeMachineStateText.setText("Brewing");
         } else if (coffeeMachineState.isCoffeeReady()) {
             mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_ready);
-            mCoffeeMachineStateText.setText("Coffee is ready");
+            mCoffeeMachineStateText.setText("Ready");
         } else {
             mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_idle);
-            mCoffeeMachineStateText.setText("Coffee machine is idle");
+            mCoffeeMachineStateText.setText("Idle");
         }
         mCoffeeMachineProgressBar.setProgress(coffeeMachineState.getBrewingProgress());
     }
 
     private void updateEngineerState(EngineerState engineerState) {
-        EngineerListAdapter engineersAdapter = (EngineerListAdapter)mEngineersListView.getAdapter();
-        engineersAdapter.updateEngineerState(engineerState);
-
-        EngineerListAdapter queueAdapter = (EngineerListAdapter)mCoffeeQueueListView.getAdapter();
-        queueAdapter.updateEngineerState(engineerState);
+        mEngineerListAdapter.updateEngineerState(engineerState);
+        mCoffeeQueueAdapter.updateEngineerState(engineerState);
     }
 
     private void updateCoffeeQueueState(CoffeeQueueState coffeeQueueState) {
-        EngineerListAdapter engineersAdapter = (EngineerListAdapter)mEngineersListView.getAdapter();
-        EngineerListAdapter queueAdapter = (EngineerListAdapter)mCoffeeQueueListView.getAdapter();
-
         ArrayList<EngineerState> queuingEngineerStates = new ArrayList<EngineerState>();
         for (Integer engineerId : coffeeQueueState.getEngineerIds()) {
-            queuingEngineerStates.add(engineersAdapter.getEngineerState(engineerId));
+            queuingEngineerStates.add(mEngineerListAdapter.getEngineerState(engineerId));
         }
 
-        queueAdapter.setEngineerStates(queuingEngineerStates);
+        mCoffeeQueueAdapter.setEngineerStates(queuingEngineerStates);
     }
 }

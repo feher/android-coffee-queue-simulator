@@ -68,7 +68,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:text="50" />
+                    android:text="10" />
             </RelativeLayout>
 
             <TextView
@@ -134,7 +134,7 @@
                     android:inputType="numberDecimal"
                     android:ems="10"
                     android:id="@+id/edit_text__seconds_until_need_coffee"
-                    android:text="600"
+                    android:text="3600"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -157,7 +157,7 @@
                     android:inputType="numberDecimal"
                     android:ems="10"
                     android:id="@+id/edit_text__seconds_until_coffee_ready"
-                    android:text="30"
+                    android:text="60"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />

@@ -3,7 +3,7 @@ package com.feheren_fekete.espresso;
 import java.util.ArrayList;
 
 public class Simulation {
-    private int mStep;
+    private long mStep;
     private SimulationParameters mParameters;
     private CoffeeMachine mCoffeeMachine;
     private CoffeeQueue mCoffeeQueue;
@@ -44,6 +44,10 @@ public class Simulation {
         mEngineers = mEngineersCopy;
 
         ++mStep;
+        sleepForAWhile();
+    }
+
+    private void sleepForAWhile() {
         try {
             double milliSeconds = Math.floor(mParameters.realSecondsPerStep * 1000);
             double nanoSeconds =
@@ -62,36 +66,4 @@ public class Simulation {
         }
         return null;
     }
-
-    public String getState() {
-        return getState(mCoffeeMachine, mCoffeeQueue);
-    }
-
-    public String getState(CoffeeMachine coffeeMachine, CoffeeQueue coffeeQueue) {
-        String state = "Step: " + mStep;
-
-        state += "\nWorking       : ";
-        ArrayList<Engineer> engineers = mEngineersCopy;
-        if (engineers == null) {
-            engineers = mEngineers;
-        }
-        for (Engineer engineer : engineers) {
-            if (engineer.isWorking()) {
-                state += engineer.getState() + " ";
-            }
-        }
-
-        state += "\nCoffee queue  : ";
-        for (int id : coffeeQueue.getIds()) {
-            Engineer engineer = findEngineerById(engineers, id);
-            state += engineer.getState() + " ";
-        }
-
-        state += "\nCoffee machine: " + coffeeMachine.getStateText();
-        state += "\n\n";
-
-        return state;
-    }
-
-
 }

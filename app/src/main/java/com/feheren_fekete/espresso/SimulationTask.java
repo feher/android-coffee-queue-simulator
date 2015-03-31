@@ -48,7 +48,7 @@ public class SimulationTask
 
     @Override
     protected void onProgressUpdate(Object... progress) {
-        List<Object> state = (List<Object>)progress[0];
+        List<Object> state = (List<Object>)(progress[0]);
         mStateChangeHandler.onSimulationStateChange(state);
     }
 

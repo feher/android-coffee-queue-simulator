@@ -3,20 +3,14 @@ package com.feheren_fekete.espresso;
 import java.util.Random;
 
 public class Engineer {
-    public static final char STATE_TEXT_BUSY = 'B';
-    public static final char STATE_TEXT_NOT_BUSY = 'N';
-    public static final char STATE_TEXT_WORKING = 'W';
-    public static final char STATE_TEXT_QUEUING_FOR_COFFEE = 'C';
-    public static final char STATE_TEXT_SEPARATOR = '|';
-
     private SimulationParameters mSimulationParameters;
     private ProgressReporter mProgressReporter;
     private int mId;
     private boolean mIsWorking;
     private boolean mIsBusy;
-    private int mBusySteps;
-    private int mBusyCheckSteps;
-    private int mStepsUntilNeedCoffee;
+    private long mBusySteps;
+    private long mBusyCheckSteps;
+    private long mStepsUntilNeedCoffee;
 
     public Engineer(int id, SimulationParameters parameters, ProgressReporter reporter) {
         mSimulationParameters = parameters;
@@ -148,16 +142,5 @@ public class Engineer {
                 ++mBusyCheckSteps;
             }
         }
-    }
-
-    public String getState() {
-        String state = getId() + "[";
-        if (isBusy()) {
-            state += "B,";
-        } else {
-            state += "_,";
-        }
-        state += mBusySteps + "," + mStepsUntilNeedCoffee + "]";
-        return state;
     }
 }
