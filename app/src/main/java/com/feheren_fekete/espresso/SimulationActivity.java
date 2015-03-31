@@ -90,9 +90,7 @@ public class SimulationActivity
 
     @Override
     public void onSimulationStateChange(Object state) {
-        if (state instanceof String) {
-            updateLog(((String) state));
-        } else if (state instanceof CoffeeMachineState) {
+        if (state instanceof CoffeeMachineState) {
             updateCoffeeMachineState((CoffeeMachineState) state);
         } else if (state instanceof EngineerState) {
             updateEngineerState((EngineerState) state);
@@ -101,16 +99,6 @@ public class SimulationActivity
         } else {
             throw new ClassCastException("Unknown simulation state!");
         }
-    }
-
-    private void updateLog(String logMessage) {
-//            String state = progress[0];
-//            CharSequence log = mStateLog.getText();
-//            if (log.length() > 1024*1024*512) {
-//                log = log.subSequence(0, log.length() - state.length());
-//            }
-//            log = state + log;
-//            mStateLog.setText(log);
     }
 
     private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {

@@ -118,9 +118,6 @@ public class Engineer {
                 if (!wasBusy
                     || (wasBusy && coffeeQueueCopy.getLength() < mSimulationParameters.maxQueueLengthWhenBusy)) {
                     goForCoffee(coffeeQueueCopy);
-                    mProgressReporter.reportLog(
-                            getState() + " goes for coffee",
-                            coffeeMachineCopy, coffeeQueueCopy);
                 }
                 reportStateChange();
             } else {
@@ -132,14 +129,9 @@ public class Engineer {
             if (nextIdInQueue == mId) {
                 if (coffeeMachine.isCoffeeReady()) {
                     goToWork(coffeeMachineCopy, coffeeQueueCopy);
-                    mProgressReporter.reportLog(getState() + " takes coffee and goes to work",
-                            coffeeMachineCopy, coffeeQueueCopy);
                     reportStateChange();
                 } else if (coffeeMachine.isIdle()) {
                     coffeeMachineCopy.startBrewing();
-                    mProgressReporter.reportLog(
-                            getState() + " starts brewing coffee",
-                            coffeeMachineCopy, coffeeQueueCopy);
                     reportStateChange();
                 }
             }

@@ -24,12 +24,6 @@ public class SimulationTask
     }
 
     @Override
-    public void reportLog(String message, CoffeeMachine coffeeMachine, CoffeeQueue coffeeQueue) {
-        String state = "Event: " + message + "\n" + mSimulation.getState(coffeeMachine, coffeeQueue);
-        publishProgress(state);
-    }
-
-    @Override
     public void reportStateChange(Object message) {
         publishProgress(message);
     }
