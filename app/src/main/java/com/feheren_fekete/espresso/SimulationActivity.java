@@ -17,9 +17,6 @@ public class SimulationActivity
         extends ActionBarActivity
         implements SimulationStateChangeHandler {
 
-    private static final String MESSAGE_LOG = "Log:";
-    private static final String MESSAGE_STATE_CHANGE = "State Change:";
-
     private ImageView mCoffeeMachineImage;
     private TextView mCoffeeMachineState;
     private ProgressBar mCoffeeMachineProgressBar;
@@ -64,7 +61,7 @@ public class SimulationActivity
                             secondsUntilNeedCoffee,
                             secondsUntilCoffeeReady,
                             maxQueueLengthWhenBusy);
-            SimulationAsyncTask simulationAsyncTask = new SimulationAsyncTask(this);
+            SimulationTask simulationAsyncTask = new SimulationTask(this);
             simulationAsyncTask.execute(parameters);
         }
     }
@@ -94,7 +91,7 @@ public class SimulationActivity
     @Override
     public void onSimulationStateChange(Object state) {
         if (state instanceof String) {
-            updateLog(((String) state).substring(MESSAGE_LOG.length()));
+            updateLog(((String) state));
         } else if (state instanceof CoffeeMachineState) {
             updateCoffeeMachineState((CoffeeMachineState) state);
         } else if (state instanceof EngineerState) {
@@ -149,44 +146,4 @@ public class SimulationActivity
 
         queueAdapter.setEngineerStates(queuingEngineerStates);
     }
-
-    private static class SimulationAsyncTask
-            extends AsyncTask<SimulationParameters, Object, Void>
-            implements ProgressReporter {
-
-        private Simulation mSimulation = null;
-        private SimulationStateChangeHandler mStateChangeHandler;
-
-        public SimulationAsyncTask(SimulationStateChangeHandler stateChangeHandler) {
-            mStateChangeHandler = stateChangeHandler;
-        }
-
-        @Override
-        protected Void doInBackground(SimulationParameters... params) {
-            SimulationParameters parameters = params[0];
-            mSimulation = new Simulation(parameters, this);
-            while (!isCancelled()) {
-                mSimulation.doOneStep();
-            }
-            return null;
-        }
-
-        @Override
-        public void reportLog(String message, CoffeeMachine coffeeMachine, CoffeeQueue coffeeQueue) {
-            String state = "Event: " + message + "\n" + mSimulation.getState(coffeeMachine, coffeeQueue);
-            publishProgress(MESSAGE_LOG + state);
-        }
-
-        @Override
-        public void reportStateChange(Object message) {
-            publishProgress(message);
-        }
-
-        @Override
-        protected void onProgressUpdate(Object... progress) {
-            Object state = progress[0];
-            mStateChangeHandler.onSimulationStateChange(state);
-        }
-    }
-
 }
