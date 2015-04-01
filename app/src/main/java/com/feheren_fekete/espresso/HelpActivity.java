@@ -31,7 +31,7 @@ public class HelpActivity extends ActionBarActivity {
                 "Description of inputs:\n\n" +
                 "- Number of engineers: The number of engineers in the office.\n" +
                 "\n" +
-                "- Probability that engineer becomes busy: Percentage between 1 and 100.\n" +
+                "- Probability that engineer becomes busy: Percentage of the probability that engineer becomes busy.\n" +
                 "\n" +
                 "- Re-evaluate busy status every N seconds: An engineer can become busy only at every N seconds.\n" +
                 "\n" +
