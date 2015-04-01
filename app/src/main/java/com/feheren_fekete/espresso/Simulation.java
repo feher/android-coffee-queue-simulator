@@ -3,7 +3,6 @@ package com.feheren_fekete.espresso;
 import java.util.ArrayList;
 
 public class Simulation {
-    private long mStep;
     private SimulationParameters mParameters;
     private CoffeeMachine mCoffeeMachine;
     private CoffeeQueue mCoffeeQueue;
@@ -11,7 +10,6 @@ public class Simulation {
     private ArrayList<Engineer> mEngineersCopy;
 
     public Simulation(SimulationParameters parameters, ProgressReporter reporter) {
-        mStep = 0;
         mParameters = parameters;
         mCoffeeMachine = new CoffeeMachine(parameters, reporter);
         mCoffeeQueue = new CoffeeQueue(reporter);
@@ -43,7 +41,6 @@ public class Simulation {
         mCoffeeQueue = coffeeQueueCopy;
         mEngineers = mEngineersCopy;
 
-        ++mStep;
         sleepForAWhile();
     }
 
