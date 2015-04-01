@@ -17,16 +17,6 @@ public class MainActivity extends ActionBarActivity {
     private EditText mSecondsUntilNeedCoffeeText;
     private EditText mSecondsUntilCoffeeReadyText;
     
-    private static class InputValues {
-        public boolean isValid;
-        public int engineerCount;
-        public int busyProbability;
-        public int busyCheckSeconds;
-        public int busySeconds;
-        public int secondsUntilNeedCoffee;
-        public int secondsUntilCoffeeReady;
-    }
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +29,6 @@ public class MainActivity extends ActionBarActivity {
         mSecondsUntilNeedCoffeeText = (EditText)findViewById(R.id.edit_text__seconds_until_need_coffee);
         mSecondsUntilCoffeeReadyText = (EditText)findViewById(R.id.edit_text__seconds_until_coffee_ready);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,30 +59,9 @@ public class MainActivity extends ActionBarActivity {
     }
     
     private void startSimulation(InputValues inputValues) {
-        // 1 simulation step _takes_ realSecondsPerStep real seconds.
-        // 1 simulation step _means_ engineerSecondsPerStep engineer-seconds.
-        // These values are measured in units of engineer-seconds:
-        // busyCheckSeconds
-        // busySeconds
-        // secondsUntilNeedCoffee
-        // secondsUntilCoffeeReady
-
-        // Make sure that the longest period will take max 5 real seconds.
-        double realSecondsPerStep = 0.1;
-        int longestPeriod = Math.max(inputValues.busySeconds, inputValues.secondsUntilNeedCoffee);
-        longestPeriod = Math.max(longestPeriod, inputValues.secondsUntilCoffeeReady);
-        double engineerSecondsPerStep = Math.round(longestPeriod * realSecondsPerStep / 5);
-
+        SimulationParameters simulationParameters = new SimulationParameters(InputValues);
         Intent simulationActivityIntent = new Intent(this, SimulationActivity.class);
-        simulationActivityIntent.putExtra(Common.SIMULATION_REAL_SECONDS_PER_STEP, inputValues.realSecondsPerStep);
-        simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_SECONDS_PER_STEP, inputValues.engineerSecondsPerStep);
-        simulationActivityIntent.putExtra(Common.SIMULATION_ENGINEER_COUNT, inputValues.engineerCount);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_PROBABILITY, inputValues.busyProbability);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_CHECK_SECONDS, inputValues.busyCheckSeconds);
-        simulationActivityIntent.putExtra(Common.SIMULATION_BUSY_SECONDS, inputValues.busySeconds);
-        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_NEED_COFFEE, inputValues.secondsUntilNeedCoffee);
-        simulationActivityIntent.putExtra(Common.SIMULATION_SECONDS_UNTIL_COFFEE_READY, inputValues.secondsUntilCoffeeReady);
-        simulationActivityIntent.putExtra(Common.SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY, 30);
+        simulationActivityIntent.putExtra(Common.SIMULATION_PARAMETERS, simulationParameters);
         startActivity(simulationActivityIntent);
     }
     

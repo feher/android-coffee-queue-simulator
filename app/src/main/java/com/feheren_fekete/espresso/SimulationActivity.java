@@ -47,30 +47,10 @@ public class SimulationActivity
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            double realSecondsPerStep = extras.getDouble(Common.SIMULATION_REAL_SECONDS_PER_STEP);
-            double engineerSecondsPerStep = extras.getDouble(Common.SIMULATION_ENGINEER_SECONDS_PER_STEP);
-            int engineerCount = extras.getInt(Common.SIMULATION_ENGINEER_COUNT);
-            int busyProb = extras.getInt(Common.SIMULATION_BUSY_PROBABILITY);
-            int busySeconds = extras.getInt(Common.SIMULATION_BUSY_SECONDS);
-            int secondsUntilNeedCoffee = extras.getInt(Common.SIMULATION_SECONDS_UNTIL_NEED_COFFEE);
-            int secondsUntilCoffeeReady = extras.getInt(Common.SIMULATION_SECONDS_UNTIL_COFFEE_READY);
-            int maxQueueLengthWhenBusy = extras.getInt(Common.SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY);
-            int busyCheckSeconds = extras.getInt(Common.SIMULATION_BUSY_CHECK_SECONDS);
-
-            createEngineerList(engineerCount);
+            SimulationParameters parameters = extras.getParcelable(Common.SIMULATION_PARAMETERS);
+            createEngineerList(parameters.engineerCount);
             createCoffeeQueueList();
 
-            SimulationParameters parameters =
-                    new SimulationParameters(
-                            realSecondsPerStep,
-                            engineerSecondsPerStep,
-                            engineerCount,
-                            busyProb,
-                            busyCheckSeconds,
-                            busySeconds,
-                            secondsUntilNeedCoffee,
-                            secondsUntilCoffeeReady,
-                            maxQueueLengthWhenBusy);
             mSimulationTask = new SimulationTask(this);
             mSimulationTask.execute(parameters);
 

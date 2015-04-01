@@ -4,16 +4,7 @@ import java.util.Random;
 
 public class Common {
     public static final String LOG_TAG = "Espresso";
-
-    public static final String SIMULATION_REAL_SECONDS_PER_STEP = "SIMULATION_REAL_SECONDS_PER_STEP";
-    public static final String SIMULATION_ENGINEER_SECONDS_PER_STEP = "SIMULATION_ENGINEER_SECONDS_PER_STEP";
-    public static final String SIMULATION_ENGINEER_COUNT = "SIMULATION_ENGINEER_COUNT";
-    public static final String SIMULATION_BUSY_PROBABILITY = "SIMULATION_BUSY_PROBABILITY";
-    public static final String SIMULATION_BUSY_SECONDS = "SIMULATION_BUSY_SECONDS";
-    public static final String SIMULATION_SECONDS_UNTIL_NEED_COFFEE = "SIMULATION_SECONDS_UNTIL_NEED_COFFEE";
-    public static final String SIMULATION_SECONDS_UNTIL_COFFEE_READY = "SIMULATION_SECONDS_UNTIL_COFFEE_READY";
-    public static final String SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY = "SIMULATION_MAX_QUEUE_LENGTH_WHEN_BUSY";
-    public static final String SIMULATION_BUSY_CHECK_SECONDS = "SIMULATION_BUSY_CHECK_SECONDS";
+    public static final String SIMULATION_PARAMETERS = "SIMULATION_PARAMETERS";
 
     public static final Random random = new Random();
 

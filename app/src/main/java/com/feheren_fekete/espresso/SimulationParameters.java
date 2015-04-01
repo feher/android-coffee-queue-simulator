@@ -1,6 +1,8 @@
 package com.feheren_fekete.espresso;
 
-public class SimulationParameters {
+import android.os.Parcelable;
+
+public class SimulationParameters implements Parcelable {
     public final double realSecondsPerStep;
     public final double engineerSecondsPerStep;
     public final int engineerCount;
@@ -11,24 +13,69 @@ public class SimulationParameters {
     public final long stepsUntilCoffeeReady;
     public final int maxQueueLengthWhenBusy;
 
-    public SimulationParameters(
-                 double realSecondsPerStep,
-                 double engineerSecondsPerStep,
-                 int engineerCount,
-                 int busyProb,
-                 int busyCheckSeconds,
-                 int busySeconds,
-                 int secondsUntilNeedCoffee,
-                 int secondsUntilCoffeeReady,
-                 int maxQueueLengthWhenBusy) {
-        this.realSecondsPerStep = realSecondsPerStep;
-        this.engineerSecondsPerStep = engineerSecondsPerStep;
-        this.engineerCount = engineerCount;
-        this.busyProb = busyProb;
-        this.busyCheckSteps = Math.round(busyCheckSeconds / engineerSecondsPerStep);
-        this.busySteps = Math.round(busySeconds / engineerSecondsPerStep);
-        this.stepsUntilNeedCoffee = Math.round(secondsUntilNeedCoffee / engineerSecondsPerStep);
-        this.stepsUntilCoffeeReady = Math.round(secondsUntilCoffeeReady / engineerSecondsPerStep);
-        this.maxQueueLengthWhenBusy = maxQueueLengthWhenBusy;
+    public SimulationParameters(InputValues inputValues) {
+        // 1 simulation step _takes_ realSecondsPerStep real seconds.
+        // 1 simulation step _means_ engineerSecondsPerStep engineer-seconds.
+        // These values are measured in units of engineer-seconds:
+        // busyCheckSeconds
+        // busySeconds
+        // secondsUntilNeedCoffee
+        // secondsUntilCoffeeReady
+
+        // Make sure that the longest period will take max 5 real seconds.
+        realSecondsPerStep = 0.1;
+        int longestPeriod = Math.max(inputValues.busySeconds, inputValues.secondsUntilNeedCoffee);
+        longestPeriod = Math.max(longestPeriod, inputValues.secondsUntilCoffeeReady);
+        engineerSecondsPerStep = Math.round(longestPeriod * realSecondsPerStep / 5);
+
+        engineerCount = inputValues.engineerCount;
+        busyProb = inputValues.busyProb;
+        busyCheckSteps = Math.round(inputValues.busyCheckSeconds / inputValues.engineerSecondsPerStep);
+        busySteps = Math.round(inputValues.busySeconds / inputValues.engineerSecondsPerStep);
+        stepsUntilNeedCoffee = Math.round(inputValues.secondsUntilNeedCoffee / inputValues.engineerSecondsPerStep);
+        stepsUntilCoffeeReady = Math.round(inputValues.secondsUntilCoffeeReady / inputValues.engineerSecondsPerStep);
+        maxQueueLengthWhenBusy = inputValues.maxQueueLengthWhenBusy;
     }
+
+    private SimulationParameters(Parcel in) {
+        // NOTE: The order must match writeToParcel()!
+        realSecondsPerStep = in.readDouble();
+        engineerSecondsPerStep = in.readDouble();
+        engineerCount = in.readInt();
+        busyProb = in.readInt();
+        busyCheckSteps = in.readLong();
+        busySteps = in.readLong();
+        stepsUntilNeedCoffee = in.readLong();
+        stepsUntilCoffeeReady = in.readLong();
+        maxQueueLengthWhenBusy = in.readInt();
+    }
+    
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        // NOTE: The order must match SimulationParameters(Parcel in)!
+        out.writeDouble(realSecondsPerStep);
+        out.writeDouble(engineerSecondsPerStep);
+        out.writeInt(engineerCount);
+        out.writeInt(busyProb);
+        out.writeLong(busyCheckSteps);
+        out.writeLong(busySteps);
+        out.writeLong(stepsUntilNeedCoffee);
+        out.writeLong(stepsUntilCoffeeReady);
+        out.writeInt(maxQueueLengthWhenBusy);
+    }
+    
+    public static final Parcelable.Creator<SimulationParameters> CREATOR =
+            new Parcelable.Creator<SimulationParameters>() {
+                public SimulationParameters createFromParcel(Parcel in) {
+                    return new SimulationParameters(in);
+                }
+                public SimulationParameters[] newArray(int size) {
+                    return new SimulationParameters[size];
+                }
+            };
 }
