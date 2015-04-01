@@ -29,7 +29,8 @@
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.feheren_fekete.espresso.MainActivity" />
