@@ -22,12 +22,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mEngineerCountText = (EditText)findViewById(R.id.edit_text__engineer_count);
-        mBusyProbabilityText = (EditText)findViewById(R.id.edit_text__busy_probability);
-        mBusyCheckSecondsText = (EditText)findViewById(R.id.edit_text__busy_check_seconds);
-        mBusySecondsText = (EditText)findViewById(R.id.edit_text__busy_seconds);
-        mSecondsUntilNeedCoffeeText = (EditText)findViewById(R.id.edit_text__seconds_until_need_coffee);
-        mSecondsUntilCoffeeReadyText = (EditText)findViewById(R.id.edit_text__seconds_until_coffee_ready);
+        mEngineerCountText = (EditText)findViewById(R.id.editText_engineerCount);
+        mBusyProbabilityText = (EditText)findViewById(R.id.editText_busyProbability);
+        mBusyCheckSecondsText = (EditText)findViewById(R.id.editText_busyCheckSeconds);
+        mBusySecondsText = (EditText)findViewById(R.id.editText_busySeconds);
+        mSecondsUntilNeedCoffeeText = (EditText)findViewById(R.id.editText_secondsUntilNeedCoffee);
+        mSecondsUntilCoffeeReadyText = (EditText)findViewById(R.id.editText_secondsUntiCoffeeReady);
     }
 
     @Override

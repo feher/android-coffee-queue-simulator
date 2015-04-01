@@ -3,7 +3,7 @@
 
     <string name="app_name">Espresso</string>
 
-    <string name="start_simulation">Start simulation</string>
+    <string name="button_startSimulation">Start simulation</string>
     <string name="title_activity_simulation">Simulation</string>
 
     <string name="title_activity_help">Help</string>

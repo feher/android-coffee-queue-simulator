@@ -37,13 +37,13 @@ public class SimulationActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simulation);
 
-        mSimulationStateText = (TextView) findViewById(R.id.text_view__simulation_state);
-        mCoffeeMachineImage = (ImageView) findViewById(R.id.image_view__coffee_machine);
-        mCoffeeMachineStateText = (TextView) findViewById(R.id.text_view__coffee_machine);
-        mCoffeeMachineProgressBar = (ProgressBar) findViewById(R.id.progress_bar__coffee_machine);
+        mSimulationStateText = (TextView) findViewById(R.id.textView_simulationState);
+        mCoffeeMachineImage = (ImageView) findViewById(R.id.imageView_coffeeMachine);
+        mCoffeeMachineStateText = (TextView) findViewById(R.id.textView_coffeeMachine);
+        mCoffeeMachineProgressBar = (ProgressBar) findViewById(R.id.progressBar_coffeeMachine);
 
-        mEngineersListView = (ListView) findViewById(R.id.list_view__engineers);
-        mCoffeeQueueListView = (ListView) findViewById(R.id.list_view__coffee_queue);
+        mEngineersListView = (ListView) findViewById(R.id.listView_engineers);
+        mCoffeeQueueListView = (ListView) findViewById(R.id.listView_coffeeQueue);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -54,7 +54,7 @@ public class SimulationActivity
             mSimulationTask = new SimulationTask(this);
             mSimulationTask.execute(parameters);
 
-            mPauseButton = (Button) findViewById(R.id.button__pause);
+            mPauseButton = (Button) findViewById(R.id.button_pause);
             mPauseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

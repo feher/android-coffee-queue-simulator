@@ -12,8 +12,8 @@ public class HelpActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
 
-        TextView header = (TextView)findViewById(R.id.text_view__help_header);
-        TextView footer = (TextView)findViewById(R.id.text_view__help_footer);
+        TextView header = (TextView)findViewById(R.id.textView_helpHeader);
+        TextView footer = (TextView)findViewById(R.id.textView_helpFooter);
         header.setText(
                 "This is a simulation of an office where engineers work.\n\n" +
                 "Every engineer needs some coffee from time-to-time to keep up the good work. " +

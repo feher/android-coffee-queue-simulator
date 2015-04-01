@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/button_start_simulation">
+        android:layout_above="@+id/button_startSimulation">
 
         <LinearLayout
             android:orientation="vertical"
@@ -22,7 +22,7 @@
 
             <TextView android:text="Number of engineers :" android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/text_view_number_of_engineers"
+                android:id="@+id/textView_engineerCount"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:ems="10"
-                    android:id="@+id/edit_text__engineer_count"
+                    android:id="@+id/editText_engineerCount"
                     android:autoText="false"
                     android:editable="true"
                     android:enabled="true"
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
-                    android:id="@+id/edit_text__busy_probability"
+                    android:id="@+id/editText_busyProbability"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
-                    android:id="@+id/edit_text__busy_check_seconds"
+                    android:id="@+id/editText_busyCheckSeconds"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
-                    android:id="@+id/edit_text__busy_seconds"
+                    android:id="@+id/editText_busySeconds"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
-                    android:id="@+id/edit_text__seconds_until_need_coffee"
+                    android:id="@+id/editText_secondsUntilNeedCoffee"
                     android:text="3600"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
-                    android:id="@+id/edit_text__seconds_until_coffee_ready"
+                    android:id="@+id/editText_secondsUntiCoffeeReady"
                     android:text="60"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
@@ -169,8 +169,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_simulation"
-        android:id="@+id/button_start_simulation"
+        android:text="@string/button_startSimulation"
+        android:id="@+id/button_startSimulation"
         android:onClick="onButtonClickedStartSimulation"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />

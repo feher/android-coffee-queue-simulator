@@ -18,7 +18,7 @@
 
             <TextView android:text="" android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/text_view__help_header" />
+                android:id="@+id/textView_helpHeader" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Small Text"
-                android:id="@+id/text_view__help_footer" />
+                android:id="@+id/textView_helpFooter" />
 
         </LinearLayout>
     </ScrollView>
