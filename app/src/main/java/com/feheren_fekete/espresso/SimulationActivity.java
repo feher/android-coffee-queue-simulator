@@ -189,6 +189,6 @@ public class SimulationActivity
             queuingEngineerStates.add(mEngineerListAdapter.getEngineerState(engineerId));
         }
 
-        mCoffeeQueueAdapter.setEngineerStates(queuingEngineerStates);
+        mCoffeeQueueAdapter.updateEngineerStates(queuingEngineerStates);
     }
 }

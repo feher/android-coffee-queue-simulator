@@ -80,7 +80,7 @@ public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
         throw new NoSuchElementException("Id " + engineerId + " not found!");
     }
 
-    public void setEngineerStates(ArrayList<EngineerState> engineerStates) {
+    public void updateEngineerStates(ArrayList<EngineerState> engineerStates) {
         mEngineerStates = engineerStates;
 
         clear();
