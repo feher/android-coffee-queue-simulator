@@ -1,6 +1,8 @@
 package com.feheren_fekete.espresso;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,10 @@ public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
     private final Context mContext;
     private ArrayList<EngineerState> mEngineerStates;
     private boolean mIsDataSetChanged;
+    private Drawable mEngineerBusyDrawable;
+    private Drawable mEngineerNotBusyDrawable;
+    private Drawable mEngineerWorkingDrawable;
+    private Drawable mEngineerQueuingDrawable;
 
     private static class ViewHolder {
         public TextView stateText;
@@ -33,6 +39,12 @@ public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
         mContext = context;
         mEngineerStates = engineerStates;
         mIsDataSetChanged = false;
+
+        Resources resources = context.getResources();
+        mEngineerBusyDrawable = resources.getDrawable(R.mipmap.engineer_busy);
+        mEngineerNotBusyDrawable = resources.getDrawable(R.mipmap.engineer_not_busy);
+        mEngineerWorkingDrawable = resources.getDrawable(R.mipmap.engineer_working);
+        mEngineerQueuingDrawable = resources.getDrawable(R.mipmap.engineer_queuing);
     }
 
     @Override
@@ -63,8 +75,10 @@ public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
         viewHolder.stateText.setText("Id: " + engineerState.getId());
         viewHolder.workText.setText(engineerState.isWorking() ? "Working" : "Queuing");
         viewHolder.busyText.setText(engineerState.isBusy() ? "Busy" : "Not busy");
-        viewHolder.busyImage.setImageResource(engineerState.isBusy() ? R.mipmap.engineer_busy : R.mipmap.engineer_not_busy);
-        viewHolder.workingImage.setImageResource(engineerState.isWorking() ? R.mipmap.engineer_working : R.mipmap.engineer_queuing);
+        viewHolder.busyImage.setImageDrawable(
+                engineerState.isBusy() ? mEngineerBusyDrawable : mEngineerNotBusyDrawable);
+        viewHolder.workingImage.setImageDrawable(
+                engineerState.isWorking() ? mEngineerWorkingDrawable : mEngineerQueuingDrawable);
         viewHolder.busyProgress.setProgress(engineerState.getBusyProgress());
         viewHolder.needCoffeeProgress.setProgress(engineerState.getNeedCoffeeProgress());
 

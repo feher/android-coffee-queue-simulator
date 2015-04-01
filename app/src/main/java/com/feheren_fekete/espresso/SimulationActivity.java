@@ -1,10 +1,11 @@
 package com.feheren_fekete.espresso;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,6 +28,9 @@ public class SimulationActivity
     private ListView mEngineersListView;
     private ListView mCoffeeQueueListView;
     private Button mPauseButton;
+    private Drawable mCoffeeMachineBrewingDrawable;
+    private Drawable mCoffeeMachineReadyDrawable;
+    private Drawable mCoffeeMachineIdleDrawable;
     private SimulationTask mSimulationTask;
     private EngineerListAdapter mEngineerListAdapter;
     private EngineerListAdapter mCoffeeQueueAdapter;
@@ -37,37 +41,46 @@ public class SimulationActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simulation);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            return;
+        }
+
         mSimulationStateText = (TextView) findViewById(R.id.textView_simulationState);
         mCoffeeMachineImage = (ImageView) findViewById(R.id.imageView_coffeeMachine);
         mCoffeeMachineStateText = (TextView) findViewById(R.id.textView_coffeeMachine);
         mCoffeeMachineProgressBar = (ProgressBar) findViewById(R.id.progressBar_coffeeMachine);
 
+        Resources resources = getResources();
+        mCoffeeMachineBrewingDrawable = resources.getDrawable(R.mipmap.coffee_machine_brewing);
+        mCoffeeMachineReadyDrawable = resources.getDrawable(R.mipmap.coffee_machine_ready);
+        mCoffeeMachineIdleDrawable = resources.getDrawable(R.mipmap.coffee_machine_idle);
+
         mEngineersListView = (ListView) findViewById(R.id.listView_engineers);
         mCoffeeQueueListView = (ListView) findViewById(R.id.listView_coffeeQueue);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            SimulationParameters parameters = extras.getParcelable(Common.SIMULATION_PARAMETERS);
-            createEngineerList(parameters.engineerCount);
-            createCoffeeQueueList();
+        mPauseButton = (Button) findViewById(R.id.button_pause);
+        mPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPauseButtonClick();
+            }
+        });
 
-            mSimulationTask = new SimulationTask(this);
-            mSimulationTask.execute(parameters);
+        SimulationParameters parameters = extras.getParcelable(Common.SIMULATION_PARAMETERS);
+        createEngineerList(parameters.engineerCount);
+        createCoffeeQueueList();
 
-            mPauseButton = (Button) findViewById(R.id.button_pause);
-            mPauseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onPauseButtonClick();
-                }
-            });
-        }
+        mSimulationTask = new SimulationTask(this);
+        mSimulationTask.execute(parameters);
     }
 
     @Override
     protected void onPause() {
-        if (!mSimulationTask.isTaskPaused()) {
-            pauseSimulation();
+        if (mSimulationTask != null) {
+            if (!mSimulationTask.isTaskPaused()) {
+                pauseSimulation();
+            }
         }
         super.onPause();
     }
@@ -75,15 +88,19 @@ public class SimulationActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSimulationTask.isTaskPaused()) {
-            resumeSimulation();
+        if (mSimulationTask != null) {
+            if (mSimulationTask.isTaskPaused()) {
+                resumeSimulation();
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         Log.d(Common.LOG_TAG, "xxxxxxxxxxxxxxxxxxxxx Destroying SimulationActivity");
-        mSimulationTask.cancel(true);
+        if (mSimulationTask != null) {
+            mSimulationTask.cancel(true);
+        }
         super.onDestroy();
     }
 
@@ -146,13 +163,13 @@ public class SimulationActivity
 
     private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {
         if (coffeeMachineState.isBrewing()) {
-            mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_brewing);
+            mCoffeeMachineImage.setImageDrawable(mCoffeeMachineBrewingDrawable);
             mCoffeeMachineStateText.setText("Brewing");
         } else if (coffeeMachineState.isCoffeeReady()) {
-            mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_ready);
+            mCoffeeMachineImage.setImageDrawable(mCoffeeMachineReadyDrawable);
             mCoffeeMachineStateText.setText("Ready");
         } else {
-            mCoffeeMachineImage.setImageResource(R.mipmap.coffee_machine_idle);
+            mCoffeeMachineImage.setImageDrawable(mCoffeeMachineIdleDrawable);
             mCoffeeMachineStateText.setText("Idle");
         }
         mCoffeeMachineProgressBar.setProgress(coffeeMachineState.getBrewingProgress());
