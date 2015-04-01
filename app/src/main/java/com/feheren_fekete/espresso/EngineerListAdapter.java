@@ -84,9 +84,7 @@ public class EngineerListAdapter extends ArrayAdapter<EngineerState> {
         mEngineerStates = engineerStates;
 
         clear();
-        for (EngineerState state : engineerStates) {
-            add(state);
-        }
+        addAll(mEngineerStates);
 
         mIsDataSetChanged = true;
     }
