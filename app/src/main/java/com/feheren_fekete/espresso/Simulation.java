@@ -54,13 +54,4 @@ public class Simulation {
             // Do nothing.
         }
     }
-
-    private Engineer findEngineerById(ArrayList<Engineer> engineers, int engineerId) {
-        for (Engineer engineer : engineers) {
-            if (engineer.getId() == engineerId) {
-                return engineer;
-            }
-        }
-        return null;
-    }
 }
