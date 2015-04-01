@@ -3,6 +3,8 @@ package com.feheren_fekete.espresso;
 import java.util.Random;
 
 public class Common {
+    public static final String LOG_TAG = "Espresso";
+
     public static final String SIMULATION_REAL_SECONDS_PER_STEP = "SIMULATION_REAL_SECONDS_PER_STEP";
     public static final String SIMULATION_ENGINEER_SECONDS_PER_STEP = "SIMULATION_ENGINEER_SECONDS_PER_STEP";
     public static final String SIMULATION_ENGINEER_COUNT = "SIMULATION_ENGINEER_COUNT";

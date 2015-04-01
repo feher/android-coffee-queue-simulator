@@ -33,7 +33,7 @@ public class SimulationActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("Foo", "xxxxxxxxxxxxxxxxxxxxx Creating");
+        Log.d(Common.LOG_TAG, "xxxxxxxxxxxxxxxxxxxxx Creating SimulationActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simulation);
 
@@ -102,7 +102,7 @@ public class SimulationActivity
 
     @Override
     protected void onDestroy() {
-        Log.d("Foo", "xxxxxxxxxxxxxxxxxxxxx Destroyinh");
+        Log.d(Common.LOG_TAG, "xxxxxxxxxxxxxxxxxxxxx Destroying SimulationActivity");
         mSimulationTask.cancel(true);
         super.onDestroy();
     }
