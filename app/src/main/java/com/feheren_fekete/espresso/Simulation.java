@@ -1,13 +1,14 @@
 package com.feheren_fekete.espresso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Simulation {
     private SimulationParameters mParameters;
     private CoffeeMachine mCoffeeMachine;
     private CoffeeQueue mCoffeeQueue;
-    private ArrayList<Engineer> mEngineers;
-    private ArrayList<Engineer> mEngineersCopy;
+    private List<Engineer> mEngineers;
+    private List<Engineer> mEngineersCopy;
 
     public Simulation(SimulationParameters parameters, ProgressReporter reporter) {
         mParameters = parameters;
