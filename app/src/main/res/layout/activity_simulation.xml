@@ -22,25 +22,15 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Simulation:"
-                android:id="@+id/textView_simulationStateStatic"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Running"
+                android:layout_height="fill_parent"
+                android:text="RUNNING"
                 android:id="@+id/textView_simulationState"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/textView_simulationStateStatic"
                 android:layout_toEndOf="@+id/textView_simulationStateStatic"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:layout_weight="2" />
+                android:layout_weight="2"
+                android:gravity="center_vertical|center_horizontal" />
 
             <Button
                 android:layout_width="wrap_content"

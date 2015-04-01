@@ -141,7 +141,7 @@ public class SimulationActivity
     private void resumeSimulation() {
         mSimulationTask.resumeTask();
         mPauseButton.setText("Pause");
-        mSimulationStateText.setText("Running...");
+        mSimulationStateText.setText("RUNNING");
     }
 
     private void updateCoffeeMachineState(CoffeeMachineState coffeeMachineState) {
