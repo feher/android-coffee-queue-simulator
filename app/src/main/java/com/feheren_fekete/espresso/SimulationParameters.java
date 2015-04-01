@@ -1,5 +1,6 @@
 package com.feheren_fekete.espresso;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SimulationParameters implements Parcelable {
@@ -23,18 +24,18 @@ public class SimulationParameters implements Parcelable {
         // secondsUntilCoffeeReady
 
         // Make sure that the longest period will take max 5 real seconds.
-        realSecondsPerStep = 0.1;
+        realSecondsPerStep = 0.1; // Hard-coded for now.
         int longestPeriod = Math.max(inputValues.busySeconds, inputValues.secondsUntilNeedCoffee);
         longestPeriod = Math.max(longestPeriod, inputValues.secondsUntilCoffeeReady);
         engineerSecondsPerStep = Math.round(longestPeriod * realSecondsPerStep / 5);
 
         engineerCount = inputValues.engineerCount;
-        busyProb = inputValues.busyProb;
-        busyCheckSteps = Math.round(inputValues.busyCheckSeconds / inputValues.engineerSecondsPerStep);
-        busySteps = Math.round(inputValues.busySeconds / inputValues.engineerSecondsPerStep);
-        stepsUntilNeedCoffee = Math.round(inputValues.secondsUntilNeedCoffee / inputValues.engineerSecondsPerStep);
-        stepsUntilCoffeeReady = Math.round(inputValues.secondsUntilCoffeeReady / inputValues.engineerSecondsPerStep);
-        maxQueueLengthWhenBusy = inputValues.maxQueueLengthWhenBusy;
+        busyProb = inputValues.busyProbability;
+        busyCheckSteps = Math.round(inputValues.busyCheckSeconds / engineerSecondsPerStep);
+        busySteps = Math.round(inputValues.busySeconds / engineerSecondsPerStep);
+        stepsUntilNeedCoffee = Math.round(inputValues.secondsUntilNeedCoffee / engineerSecondsPerStep);
+        stepsUntilCoffeeReady = Math.round(inputValues.secondsUntilCoffeeReady / engineerSecondsPerStep);
+        maxQueueLengthWhenBusy = 30; // Hard-coded for now.
     }
 
     private SimulationParameters(Parcel in) {

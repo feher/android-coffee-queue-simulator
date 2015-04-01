@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -59,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
     }
     
     private void startSimulation(InputValues inputValues) {
-        SimulationParameters simulationParameters = new SimulationParameters(InputValues);
+        SimulationParameters simulationParameters = new SimulationParameters(inputValues);
         Intent simulationActivityIntent = new Intent(this, SimulationActivity.class);
         simulationActivityIntent.putExtra(Common.SIMULATION_PARAMETERS, simulationParameters);
         startActivity(simulationActivityIntent);
@@ -81,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
     
     private int getInputValue(TextView textView,
                               int minValue, int maxValue,
-                              int String errorMessage) {
+                              String errorMessage) {
         int value = 0;
         try {
             value = Integer.parseInt(textView.getText().toString());
