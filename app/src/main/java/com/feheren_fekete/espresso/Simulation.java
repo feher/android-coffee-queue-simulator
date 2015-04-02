@@ -23,11 +23,13 @@ public class Simulation {
     }
 
     public void doOneStep() {
-        // The engineers depend on the coffee machine.
-        // So we must update the coffee machine first.
-        mCoffeeMachine.doOneStep();
+        boolean isCoffeeReady = mCoffeeMachine.isCoffeeReady();
+        Integer nextIdInQueue = mCoffeeQueue.getNext();
+        boolean isQueueEmpty = mCoffeeQueue.isEmpty();
+
+        mCoffeeMachine.doOneStep(isQueueEmpty);
         for (Engineer engineer : mEngineers) {
-            engineer.doOneStep(mCoffeeMachine, mCoffeeQueue);
+            engineer.doOneStep(isCoffeeReady, nextIdInQueue);
         }
 
         for (Engineer engineer : mEngineers) {
@@ -41,11 +43,8 @@ public class Simulation {
         }
 
         if (!mCoffeeQueue.isEmpty()) {
-            if (mCoffeeMachine.isCoffeeReady()) {
-                mCoffeeMachine.takeCoffee();
+            if (isCoffeeReady) {
                 mCoffeeQueue.removeNext();
-            } else if (mCoffeeMachine.isIdle()) {
-                mCoffeeMachine.startBrewing();
             }
         }
 

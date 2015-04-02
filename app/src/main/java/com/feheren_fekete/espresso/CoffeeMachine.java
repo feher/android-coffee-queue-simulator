@@ -26,15 +26,22 @@ public class CoffeeMachine {
         return new CoffeeMachineState(!isIdle(), isCoffeeReady(), progress);
     }
 
-    public void doOneStep() {
-        if (mIsIdle) {
-            return;
-        }
-        if (mStepsUntilCoffeeReady == 0) {
-            mIsCoffeeReady = true;
-            mIsIdle = true;
+    public void doOneStep(boolean isQueueEmpty) {
+        if (mIsCoffeeReady) {
+            if (!isQueueEmpty) {
+                takeCoffee();
+            }
+        } else if (mIsIdle) {
+            if (!isQueueEmpty) {
+                startBrewing();
+            }
         } else {
-            --mStepsUntilCoffeeReady;
+            if (mStepsUntilCoffeeReady == 0) {
+                mIsCoffeeReady = true;
+                mIsIdle = true;
+            } else {
+                --mStepsUntilCoffeeReady;
+            }
         }
     }
 

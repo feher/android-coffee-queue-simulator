@@ -106,11 +106,10 @@ public class Engineer {
         }
     }
 
-    private void doOneQueuingStep(CoffeeMachine coffeeMachine,
-                                  CoffeeQueue coffeeQueue) {
-        assert !coffeeQueue.isEmpty();
-        Integer nextIdInQueue = coffeeQueue.getNext();
-        if (nextIdInQueue == getId() && coffeeMachine.isCoffeeReady()) {
+    private void doOneQueuingStep(boolean isCoffeeReady,
+                                  Integer nextIdInQueue) {
+        assert nextIdInQueue != null;
+        if (isCoffeeReady && nextIdInQueue == getId()) {
             goToWork();
         }
     }
@@ -126,8 +125,8 @@ public class Engineer {
         }
     }
     
-    public void doOneStep(CoffeeMachine coffeeMachine,
-                          CoffeeQueue coffeeQueue) {
+    public void doOneStep(boolean isCoffeeReady,
+                          Integer nextIdInQueue) {
         mShouldReportStateChange = false;
 
         if (!isBusy()) {
@@ -137,7 +136,7 @@ public class Engineer {
         if (isWorking()) {
             doOneWorkingStep();
         } else {
-            doOneQueuingStep(coffeeMachine, coffeeQueue);
+            doOneQueuingStep(isCoffeeReady, nextIdInQueue);
         }
     }
 }
