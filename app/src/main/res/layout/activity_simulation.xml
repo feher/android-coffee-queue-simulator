@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Engineers"
-                    android:id="@+id/textView"
+                    android:id="@+id/textView_engineerListTitle"
                     android:textColor="#ff000000" />
 
                 <ListView
@@ -134,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Coffee Queue"
-                        android:id="@+id/textView3"
+                        android:id="@+id/textView_coffeeQueueTitle"
                         android:textColor="#ff000000" />
 
                     <ListView

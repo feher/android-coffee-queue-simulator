@@ -28,6 +28,8 @@ public class SimulationActivity
     private ListView mEngineersListView;
     private ListView mCoffeeQueueListView;
     private Button mPauseButton;
+    private TextView mEngineerListTitle;
+    private TextView mCoffeeQueueTitle;
     private Drawable mCoffeeMachineBrewingDrawable;
     private Drawable mCoffeeMachineReadyDrawable;
     private Drawable mCoffeeMachineIdleDrawable;
@@ -59,6 +61,9 @@ public class SimulationActivity
         mEngineersListView = (ListView) findViewById(R.id.listView_engineers);
         mCoffeeQueueListView = (ListView) findViewById(R.id.listView_coffeeQueue);
 
+        mEngineerListTitle = (TextView) findViewById(R.id.textView_engineerListTitle);
+        mCoffeeQueueTitle = (TextView) findViewById(R.id.textView_coffeeQueueTitle);
+
         mPauseButton = (Button) findViewById(R.id.button_pause);
         mPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +78,8 @@ public class SimulationActivity
 
         mSimulationTask = new SimulationTask(this);
         mSimulationTask.execute(parameters);
+
+        mEngineerListTitle.setText("Engineers (" + parameters.engineerCount + ")");
     }
 
     @Override
@@ -187,5 +194,6 @@ public class SimulationActivity
         }
 
         mCoffeeQueueAdapter.updateEngineerStates(queuingEngineerStates);
+        mCoffeeQueueTitle.setText("Coffee Queue (" + queuingEngineerStates.size() + ")");
     }
 }
