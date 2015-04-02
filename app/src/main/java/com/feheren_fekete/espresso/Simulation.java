@@ -38,11 +38,26 @@ public class Simulation {
         }
 
         for (Engineer engineerCopy : mEngineersCopy) {
-            engineerCopy.doOneStep(
-                    mCoffeeMachine, mCoffeeQueue,
-                    coffeeMachineCopy, coffeeQueueCopy);
+            engineerCopy.doOneStep(mCoffeeMachine, mCoffeeQueue);
+            if (!engineerCopy.isWorking()) {
+                if (coffeeQueue.contains(engineer.getId())) {
+                    coffeeQueue.update(engineer.getId(), engineer.isBusy());
+                } else {
+                    coffeeQueue.add(engineer.getId(), engineer.isBusy());
+                }
+            }
         }
         coffeeMachineCopy.doOneStep();
+
+        if (!coffeeQueue.isEmpty()) {
+            if (coffeeMachine.isIdle()) {
+                coffeeMachine.startBrewing();
+            }
+            else if (coffeeMachine.isCoffeeReady()) {
+                coffeeQueue.removeFirst();
+                coffeeMachine.takeCoffee();
+            }
+        }
 
         mCoffeeMachine = coffeeMachineCopy;
         mCoffeeQueue = coffeeQueueCopy;

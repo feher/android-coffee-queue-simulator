@@ -57,14 +57,10 @@ public class Engineer {
         return !isWorking();
     }
 
-    private void setBusy(CoffeeQueue coffeeQueue, boolean isBusy) {
+    private void setBusy(boolean isBusy) {
         assert mIsBusy != isBusy;
         mIsBusy = isBusy;
         mBusySteps = mSimulationParameters.busySteps;
-        if (isQueuing()) {
-            coffeeQueue.remove(mId);
-            coffeeQueue.add(mId, mIsBusy);
-        }
         mShouldReportStateChange = true;
     }
     
@@ -78,18 +74,14 @@ public class Engineer {
         mShouldReportStateChange = true;
     }
 
-    private void goForCoffee(CoffeeQueue coffeeQueue) {
+    private void goForCoffee() {
         assert isWorking();
-        coffeeQueue.add(mId, mIsBusy);
         mIsWorking = false;
         mShouldReportStateChange = true;
     }
 
-    private void goToWork(CoffeeMachine coffeeMachine,
-                          CoffeeQueue coffeeQueue) {
+    private void goToWork() {
         assert isQueuing();
-        coffeeMachine.takeCoffee();
-        coffeeQueue.remove(mId);
         mIsWorking = true;
         mStepsUntilNeedCoffee = mSimulationParameters.stepsUntilNeedCoffee;
         mShouldReportStateChange = true;
@@ -109,46 +101,35 @@ public class Engineer {
         mProgressReporter.reportStateChange(state);
     }
 
-    private void doOneWorkingStep(CoffeeQueue coffeeQueue) {
-        boolean wasBusy = isBusy();
-        
+    private void doOneWorkingStep() {
         if (isBusy()) {
             if (mBusySteps == 0) {
-                setBusy(coffeeQueue, false);
+                setBusy(false);
             } else {
                 makeLessBusy();
             }
         }
         
         if (mStepsUntilNeedCoffee == 0) {
-            if (!wasBusy
-                || (wasBusy && coffeeQueue.getLength() < mSimulationParameters.maxQueueLengthWhenBusy)) {
-                goForCoffee(coffeeQueue);
-            }
+            goForCoffee();
         } else {
             workAndDrinkTheCoffee();
         }
     }
 
     private void doOneQueuingStep(CoffeeMachine coffeeMachine,
-                                  CoffeeQueue coffeeQueue,
-                                  CoffeeMachine coffeeMachineCopy,
-                                  CoffeeQueue coffeeQueueCopy) {
+                                  CoffeeQueue coffeeQueue) {
         Integer nextIdInQueue = coffeeQueue.next();
-        if (nextIdInQueue == mId) {
-            if (coffeeMachine.isCoffeeReady()) {
-                goToWork(coffeeMachineCopy, coffeeQueueCopy);
-            } else if (coffeeMachine.isIdle()) {
-                coffeeMachineCopy.startBrewing();
-            }
+        if (nextIdInQueue == getId() && coffeeMachine.isCoffeeReady()) {
+            goToWork();
         }
     }
     
-    private void maybeBecomeBusy(CoffeeQueue coffeeQueue) {
+    private void maybeBecomeBusy() {
         if (mBusyCheckSteps == mSimulationParameters.busyCheckSteps) {
             mBusyCheckSteps = 0;
             if (Common.eventHappens(mSimulationParameters.busyProb)) {
-                setBusy(coffeeQueue, true);
+                setBusy(true);
             }
         } else {
             ++mBusyCheckSteps;
@@ -156,19 +137,17 @@ public class Engineer {
     }
     
     public void doOneStep(CoffeeMachine coffeeMachine,
-                          CoffeeQueue coffeeQueue,
-                          CoffeeMachine coffeeMachineCopy,
-                          CoffeeQueue coffeeQueueCopy) {
+                          CoffeeQueue coffeeQueue) {
         mShouldReportStateChange = false;
 
         if (!isBusy()) {
-            maybeBecomeBusy(coffeeQueueCopy);
+            maybeBecomeBusy();
         }
         
         if (isWorking()) {
-            doOneWorkingStep(coffeeQueueCopy);
+            doOneWorkingStep();
         } else {
-            doOneQueuingStep(coffeeMachine, coffeeQueue, coffeeMachineCopy, coffeeQueueCopy);
+            doOneQueuingStep(coffeeMachine, coffeeQueue);
         }
         
         if (mShouldReportStateChange) {
