@@ -27,7 +27,8 @@ public class SimulationTask
     @Override
     protected Void doInBackground(SimulationParameters... params) {
         SimulationParameters parameters = params[0];
-        mSimulation = new Simulation(parameters, this);
+        createSimulation(parameters);
+
         while (!isCancelled()) {
             mStateChanges = new ArrayList<Object>();
             mSimulation.doOneStep();
@@ -38,7 +39,19 @@ public class SimulationTask
                 waitForResume();
             }
         }
+
         return null;
+    }
+
+    private void createSimulation(SimulationParameters parameters) {
+        CoffeeMachine coffeeMachine = new CoffeeMachine(parameters);
+        CoffeeQueue coffeeQueue = new CoffeeQueue();
+        List<Engineer> engineers = new ArrayList<Engineer>();
+        for (int i = 0; i < parameters.engineerCount; ++i) {
+            Engineer engineer = new Engineer(i, parameters);
+            engineers.add(engineer);
+        }
+        mSimulation = new Simulation(parameters, this, coffeeMachine, coffeeQueue, engineers);
     }
 
     @Override

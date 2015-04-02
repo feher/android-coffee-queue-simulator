@@ -10,16 +10,16 @@ public class Simulation {
     private CoffeeQueue mCoffeeQueue;
     private List<Engineer> mEngineers;
 
-    public Simulation(SimulationParameters parameters, ProgressReporter reporter) {
+    public Simulation(SimulationParameters parameters,
+                      ProgressReporter reporter,
+                      CoffeeMachine coffeeMachine,
+                      CoffeeQueue coffeeQueue,
+                      List<Engineer> engineers) {
         mParameters = parameters;
         mProgressReporter = reporter;
-        mCoffeeMachine = new CoffeeMachine(parameters);
-        mCoffeeQueue = new CoffeeQueue();
-        mEngineers = new ArrayList<Engineer>();
-        for (int i = 0; i < mParameters.engineerCount; ++i) {
-            Engineer engineer = new Engineer(i, parameters);
-            mEngineers.add(engineer);
-        }
+        mCoffeeMachine = coffeeMachine;
+        mCoffeeQueue = coffeeQueue;
+        mEngineers = engineers;
     }
 
     public void doOneStep() {
