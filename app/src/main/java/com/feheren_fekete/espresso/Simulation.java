@@ -23,6 +23,12 @@ public class Simulation {
     }
 
     public void doOneStep() {
+        // We need a copy of the queue:
+        // The 1st engineer in the queue removes itself from the queue.
+        // We must make sure that the 2nd engineer still sees itself as the 2nd.
+        //
+        // In order to be safe, we just make a copy of everything.
+        
         CoffeeMachine coffeeMachineCopy = new CoffeeMachine(mCoffeeMachine);
         CoffeeQueue coffeeQueueCopy = new CoffeeQueue(mCoffeeQueue);
         mEngineersCopy = new ArrayList<Engineer>();
