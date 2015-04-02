@@ -5,7 +5,6 @@ import java.util.Random;
 public class Engineer {
     private boolean mShouldReportStateChange;
     private SimulationParameters mSimulationParameters;
-    private ProgressReporter mProgressReporter;
     private int mId;
     private boolean mIsWorking;
     private boolean mIsBusy;
@@ -13,10 +12,9 @@ public class Engineer {
     private long mBusyCheckSteps;
     private long mStepsUntilNeedCoffee;
 
-    public Engineer(int id, SimulationParameters parameters, ProgressReporter reporter) {
+    public Engineer(int id, SimulationParameters parameters) {
         mShouldReportStateChange = false;
         mSimulationParameters = parameters;
-        mProgressReporter = reporter;
         mId = id;
         mIsWorking = true;
         mIsBusy = false;
@@ -29,16 +27,21 @@ public class Engineer {
         }
     }
 
-    public Engineer(Engineer other) {
-        mShouldReportStateChange = other.mShouldReportStateChange;
-        mSimulationParameters = other.mSimulationParameters;
-        mProgressReporter = other.mProgressReporter;
-        mId = other.mId;
-        mIsWorking = other.mIsWorking;
-        mIsBusy = other.mIsBusy;
-        mBusySteps = other.mBusySteps;
-        mBusyCheckSteps = other.mBusyCheckSteps;
-        mStepsUntilNeedCoffee = other.mStepsUntilNeedCoffee;
+    public boolean hasNewState() {
+        return mShouldReportStateChange;
+    }
+
+    public EngineerState getState() {
+        int busyProgress =
+                Math.round(
+                        (float)(mSimulationParameters.busySteps - mBusySteps)
+                                * 100 / mSimulationParameters.busySteps);
+        int needCoffeeProgress =
+                Math.round(
+                        (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
+                                * 100 / mSimulationParameters.stepsUntilNeedCoffee);
+
+        return new EngineerState(getId(), isBusy(), isWorking(), busyProgress, needCoffeeProgress);
     }
 
     public int getId() {
@@ -53,7 +56,7 @@ public class Engineer {
         return mIsWorking;
     }
 
-    private boolean isQueuing() {
+    public boolean isQueuing() {
         return !isWorking();
     }
 
@@ -87,20 +90,6 @@ public class Engineer {
         mShouldReportStateChange = true;
     }
 
-    private void reportStateChange() {
-        int busyProgress =
-                Math.round(
-                        (float)(mSimulationParameters.busySteps - mBusySteps)
-                                * 100 / mSimulationParameters.busySteps);
-        int needCoffeeProgress =
-                Math.round(
-                        (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
-                                * 100 / mSimulationParameters.stepsUntilNeedCoffee);
-        EngineerState state =
-                new EngineerState(getId(), isBusy(), isWorking(), busyProgress, needCoffeeProgress);
-        mProgressReporter.reportStateChange(state);
-    }
-
     private void doOneWorkingStep() {
         if (isBusy()) {
             if (mBusySteps == 0) {
@@ -119,7 +108,10 @@ public class Engineer {
 
     private void doOneQueuingStep(CoffeeMachine coffeeMachine,
                                   CoffeeQueue coffeeQueue) {
-        Integer nextIdInQueue = coffeeQueue.next();
+        if (coffeeQueue.isEmpty()) {
+            return;
+        }
+        Integer nextIdInQueue = coffeeQueue.getNext();
         if (nextIdInQueue == getId() && coffeeMachine.isCoffeeReady()) {
             goToWork();
         }
@@ -148,10 +140,6 @@ public class Engineer {
             doOneWorkingStep();
         } else {
             doOneQueuingStep(coffeeMachine, coffeeQueue);
-        }
-        
-        if (mShouldReportStateChange) {
-            reportStateChange();
         }
     }
 }

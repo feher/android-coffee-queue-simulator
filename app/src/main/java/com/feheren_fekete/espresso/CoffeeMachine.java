@@ -3,34 +3,27 @@ package com.feheren_fekete.espresso;
 public class CoffeeMachine {
 
     private SimulationParameters mSimulationParameters;
-    private ProgressReporter mProgressReporter;
     private boolean mIsIdle;
     private boolean mIsCoffeeReady;
     private long mStepsUntilCoffeeReady;
 
-    public CoffeeMachine(SimulationParameters parameters, ProgressReporter reporter) {
+    public CoffeeMachine(SimulationParameters parameters) {
         mSimulationParameters = parameters;
-        mProgressReporter = reporter;
         mIsIdle = true;
         mIsCoffeeReady = false;
         mStepsUntilCoffeeReady = 0;
     }
 
-    public CoffeeMachine(CoffeeMachine other) {
-        mIsIdle = other.mIsIdle;
-        mIsCoffeeReady = other.mIsCoffeeReady;
-        mStepsUntilCoffeeReady = other.mStepsUntilCoffeeReady;
-        mProgressReporter = other.mProgressReporter;
-        mSimulationParameters = other.mSimulationParameters;
+    public boolean hasNewState() {
+        return true;
     }
 
-    private void reportStateChange() {
+    public CoffeeMachineState getState() {
         int progress =
                 Math.round(
                         (float)(mSimulationParameters.stepsUntilCoffeeReady - mStepsUntilCoffeeReady)
                                 * 100 / mSimulationParameters.stepsUntilCoffeeReady);
-        CoffeeMachineState state = new CoffeeMachineState(!isIdle(), isCoffeeReady(), progress);
-        mProgressReporter.reportStateChange(state);
+        return new CoffeeMachineState(!isIdle(), isCoffeeReady(), progress);
     }
 
     public void doOneStep() {
@@ -40,10 +33,8 @@ public class CoffeeMachine {
         if (mStepsUntilCoffeeReady == 0) {
             mIsCoffeeReady = true;
             mIsIdle = true;
-            reportStateChange();
         } else {
             --mStepsUntilCoffeeReady;
-            reportStateChange();
         }
     }
 
@@ -60,7 +51,6 @@ public class CoffeeMachine {
         mIsIdle = true;
         mIsCoffeeReady = false;
         mStepsUntilCoffeeReady = 0;
-        reportStateChange();
     }
 
     public void startBrewing() {
@@ -68,6 +58,5 @@ public class CoffeeMachine {
         mIsIdle = false;
         mIsCoffeeReady = false;
         mStepsUntilCoffeeReady = mSimulationParameters.stepsUntilCoffeeReady;
-        reportStateChange();
     }
 }

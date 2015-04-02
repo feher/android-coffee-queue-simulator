@@ -5,23 +5,31 @@ import java.util.List;
 
 public class CoffeeQueue {
 
-    private final ProgressReporter mProgressReporter;
     private final List<Integer> mBusyQueue;
     private final List<Integer> mNormalQueue;
 
-    public CoffeeQueue(ProgressReporter reporter) {
+    public CoffeeQueue() {
         mBusyQueue = new ArrayList<Integer>();
         mNormalQueue = new ArrayList<Integer>();
-        mProgressReporter = reporter;
     }
 
-    public CoffeeQueue(CoffeeQueue other) {
-        mBusyQueue = new ArrayList<Integer>(other.mBusyQueue);
-        mNormalQueue = new ArrayList<Integer>(other.mNormalQueue);
-        mProgressReporter = other.mProgressReporter;
+    public boolean hasNewState() {
+        return true;
     }
 
-    public Integer next() {
+    public CoffeeQueueState getState() {
+        return new CoffeeQueueState(getIds());
+    }
+
+    public boolean isEmpty() {
+        return mBusyQueue.isEmpty() && mNormalQueue.isEmpty();
+    }
+
+    public boolean contains(Engineer engineer) {
+        return mBusyQueue.contains(engineer.getId()) || mNormalQueue.contains(engineer.getId());
+    }
+
+    public Integer getNext() {
         if (!mBusyQueue.isEmpty()) {
             return mBusyQueue.get(0);
         }
@@ -31,8 +39,12 @@ public class CoffeeQueue {
         return null;
     }
 
-    private void reportStateChange() {
-        mProgressReporter.reportStateChange(new CoffeeQueueState(getIds()));
+    public void removeNext() {
+        if (!mBusyQueue.isEmpty()) {
+            mBusyQueue.remove(0);
+        } else if (!mNormalQueue.isEmpty()) {
+            mNormalQueue.remove(0);
+        }
     }
 
     private void addToQueue(List<Integer> queue, int engineerId) {
@@ -44,28 +56,38 @@ public class CoffeeQueue {
         queue.add(engineerId);
     }
 
-    public void add(int engineerId, boolean isBusy) {
-        if (isBusy) {
-            addToQueue(mBusyQueue, engineerId);
+    public void add(Engineer engineer) {
+        assert !contains(engineer);
+        if (engineer.isBusy()) {
+            addToQueue(mBusyQueue, engineer.getId());
         } else {
-            addToQueue(mNormalQueue, engineerId);
+            addToQueue(mNormalQueue, engineer.getId());
         }
-        reportStateChange();
     }
 
-    public void remove(int engineerId) {
-        mBusyQueue.remove(new Integer(engineerId));
-        mNormalQueue.remove(new Integer(engineerId));
-        reportStateChange();
+    public void update(Engineer engineer) {
+        assert contains(engineer);
+        int id = engineer.getId();
+        if (engineer.isBusy()) {
+            if (!mBusyQueue.contains(id)) {
+                if (mNormalQueue.contains(id)) {
+                    mNormalQueue.remove(new Integer(id));
+                }
+                mBusyQueue.add(id);
+            }
+        } else {
+            if (!mNormalQueue.contains(id)) {
+                if (mBusyQueue.contains(id)) {
+                    mBusyQueue.remove(new Integer(id));
+                }
+                mNormalQueue.add(id);
+            }
+        }
     }
 
     public List<Integer> getIds() {
         List<Integer> ids = new ArrayList<Integer>(mBusyQueue);
         ids.addAll(mNormalQueue);
         return ids;
-    }
-
-    public int getLength() {
-        return mBusyQueue.size() + mNormalQueue.size();
     }
 }

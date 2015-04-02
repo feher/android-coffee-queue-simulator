@@ -5,65 +5,69 @@ import java.util.List;
 
 public class Simulation {
     private SimulationParameters mParameters;
+    private ProgressReporter mProgressReporter;
     private CoffeeMachine mCoffeeMachine;
     private CoffeeQueue mCoffeeQueue;
     private List<Engineer> mEngineers;
-    private List<Engineer> mEngineersCopy;
 
     public Simulation(SimulationParameters parameters, ProgressReporter reporter) {
         mParameters = parameters;
-        mCoffeeMachine = new CoffeeMachine(parameters, reporter);
-        mCoffeeQueue = new CoffeeQueue(reporter);
+        mProgressReporter = reporter;
+        mCoffeeMachine = new CoffeeMachine(parameters);
+        mCoffeeQueue = new CoffeeQueue();
         mEngineers = new ArrayList<Engineer>();
-        mEngineersCopy = null;
         for (int i = 0; i < mParameters.engineerCount; ++i) {
-            Engineer engineer = new Engineer(i, parameters, reporter);
+            Engineer engineer = new Engineer(i, parameters);
             mEngineers.add(engineer);
         }
     }
 
     public void doOneStep() {
-        // We need a copy of the queue:
-        // The 1st engineer in the queue removes itself from the queue.
-        // We must make sure that the 2nd engineer still sees itself as the 2nd.
-        //
-        // In order to be safe, we just make a copy of everything.
-        
-        CoffeeMachine coffeeMachineCopy = new CoffeeMachine(mCoffeeMachine);
-        CoffeeQueue coffeeQueueCopy = new CoffeeQueue(mCoffeeQueue);
-        mEngineersCopy = new ArrayList<Engineer>();
+        // The engineers depend on the coffee machine.
+        // So we must update the coffee machine first.
+        mCoffeeMachine.doOneStep();
         for (Engineer engineer : mEngineers) {
-            Engineer engineerCopy = new Engineer(engineer);
-            mEngineersCopy.add(engineerCopy);
+            engineer.doOneStep(mCoffeeMachine, mCoffeeQueue);
         }
 
-        for (Engineer engineerCopy : mEngineersCopy) {
-            engineerCopy.doOneStep(mCoffeeMachine, mCoffeeQueue);
-            if (!engineerCopy.isWorking()) {
-                if (coffeeQueue.contains(engineer.getId())) {
-                    coffeeQueue.update(engineer.getId(), engineer.isBusy());
+        for (Engineer engineer : mEngineers) {
+            if (engineer.isQueuing()) {
+                if (mCoffeeQueue.contains(engineer)) {
+                    mCoffeeQueue.update(engineer);
                 } else {
-                    coffeeQueue.add(engineer.getId(), engineer.isBusy());
+                    mCoffeeQueue.add(engineer);
                 }
             }
         }
-        coffeeMachineCopy.doOneStep();
 
-        if (!coffeeQueue.isEmpty()) {
-            if (coffeeMachine.isIdle()) {
-                coffeeMachine.startBrewing();
-            }
-            else if (coffeeMachine.isCoffeeReady()) {
-                coffeeQueue.removeFirst();
-                coffeeMachine.takeCoffee();
+        if (!mCoffeeQueue.isEmpty()) {
+            if (mCoffeeMachine.isCoffeeReady()) {
+                mCoffeeMachine.takeCoffee();
+                mCoffeeQueue.removeNext();
+            } else if (mCoffeeMachine.isIdle()) {
+                mCoffeeMachine.startBrewing();
             }
         }
 
-        mCoffeeMachine = coffeeMachineCopy;
-        mCoffeeQueue = coffeeQueueCopy;
-        mEngineers = mEngineersCopy;
+        reportStateChanges();
 
         sleepForAWhile();
+    }
+
+    private void reportStateChanges() {
+        for (Engineer engineer : mEngineers) {
+            if (engineer.hasNewState()) {
+                mProgressReporter.reportStateChange(engineer.getState());
+            }
+        }
+
+        if (mCoffeeMachine.hasNewState()) {
+            mProgressReporter.reportStateChange(mCoffeeMachine.getState());
+        }
+
+        if (mCoffeeQueue.hasNewState()) {
+            mProgressReporter.reportStateChange(mCoffeeQueue.getState());
+        }
     }
 
     private void sleepForAWhile() {
