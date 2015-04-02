@@ -108,9 +108,7 @@ public class Engineer {
 
     private void doOneQueuingStep(CoffeeMachine coffeeMachine,
                                   CoffeeQueue coffeeQueue) {
-        if (coffeeQueue.isEmpty()) {
-            return;
-        }
+        assert !coffeeQueue.isEmpty();
         Integer nextIdInQueue = coffeeQueue.getNext();
         if (nextIdInQueue == getId() && coffeeMachine.isCoffeeReady()) {
             goToWork();
