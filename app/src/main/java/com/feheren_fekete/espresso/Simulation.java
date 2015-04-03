@@ -22,31 +22,25 @@ public class Simulation {
         mEngineers = engineers;
     }
 
+    public List<EngineerState> getEngineerStates() {
+        List<EngineerState> states = new ArrayList<EngineerState>();
+        for (Engineer engineer : mEngineers) {
+            states.add(engineer.getState());
+        }
+        return states;
+    }
+
     public void doOneStep() {
         boolean isCoffeeReady = mCoffeeMachine.isCoffeeReady();
         Integer nextIdInQueue = mCoffeeQueue.getNext();
         boolean isQueueEmpty = mCoffeeQueue.isEmpty();
+        List<EngineerState> engineerStates = getEngineerStates();
 
         mCoffeeMachine.doOneStep(isQueueEmpty);
         for (Engineer engineer : mEngineers) {
             engineer.doOneStep(isCoffeeReady, nextIdInQueue);
         }
-
-        for (Engineer engineer : mEngineers) {
-            if (engineer.isQueuing()) {
-                if (mCoffeeQueue.contains(engineer)) {
-                    mCoffeeQueue.update(engineer);
-                } else {
-                    mCoffeeQueue.add(engineer);
-                }
-            }
-        }
-
-        if (!mCoffeeQueue.isEmpty()) {
-            if (isCoffeeReady) {
-                mCoffeeQueue.removeNext();
-            }
-        }
+        mCoffeeQueue.doOneStep(isCoffeeReady, engineerStates);
 
         reportStateChanges();
 

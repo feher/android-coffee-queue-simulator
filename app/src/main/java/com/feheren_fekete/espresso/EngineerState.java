@@ -27,6 +27,10 @@ public class EngineerState {
         return mIsWorking;
     }
 
+    public boolean isQueuing() {
+        return !mIsWorking;
+    }
+
     public int getBusyProgress() {
         return mBusyProgress;
     }

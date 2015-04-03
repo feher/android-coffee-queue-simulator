@@ -25,7 +25,7 @@ public class CoffeeQueue {
         return mBusyQueue.isEmpty() && mNormalQueue.isEmpty();
     }
 
-    public boolean contains(Engineer engineer) {
+    private boolean contains(EngineerState engineer) {
         return mBusyQueue.contains(engineer.getId()) || mNormalQueue.contains(engineer.getId());
     }
 
@@ -39,7 +39,7 @@ public class CoffeeQueue {
         return null;
     }
 
-    public void removeNext() {
+    private void removeNext() {
         if (!mBusyQueue.isEmpty()) {
             mBusyQueue.remove(0);
         } else if (!mNormalQueue.isEmpty()) {
@@ -56,7 +56,7 @@ public class CoffeeQueue {
         queue.add(engineerId);
     }
 
-    public void add(Engineer engineer) {
+    private void add(EngineerState engineer) {
         assert !contains(engineer);
         if (engineer.isBusy()) {
             addToQueue(mBusyQueue, engineer.getId());
@@ -65,7 +65,7 @@ public class CoffeeQueue {
         }
     }
 
-    public void update(Engineer engineer) {
+    private void update(EngineerState engineer) {
         assert contains(engineer);
         int id = engineer.getId();
         if (engineer.isBusy()) {
@@ -89,5 +89,23 @@ public class CoffeeQueue {
         List<Integer> ids = new ArrayList<Integer>(mBusyQueue);
         ids.addAll(mNormalQueue);
         return ids;
+    }
+
+    public void doOneStep(boolean isCoffeeReady, List<EngineerState> engineers) {
+        for (EngineerState engineer : engineers) {
+            if (engineer.isQueuing()) {
+                if (contains(engineer)) {
+                    update(engineer);
+                } else {
+                    add(engineer);
+                }
+            }
+        }
+
+        if (!isEmpty()) {
+            if (isCoffeeReady) {
+                removeNext();
+            }
+        }
     }
 }
