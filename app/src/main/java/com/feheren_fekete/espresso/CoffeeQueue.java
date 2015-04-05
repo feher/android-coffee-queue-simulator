@@ -13,14 +13,6 @@ public class CoffeeQueue {
         mNormalQueue = new ArrayList<Integer>();
     }
 
-    public void setBusyQueue(List<Integer> busyQueue) {
-        mBusyQueue = busyQueue;
-    }
-
-    public void setNormalQueue(List<Integer> busyQueue) {
-        mBusyQueue = busyQueue;
-    }
-
     public boolean hasNewState() {
         return true;
     }
@@ -47,24 +39,22 @@ public class CoffeeQueue {
         return null;
     }
 
-    private void removeNext() {
+    private void remove(EngineerState engineer) {
+        assert contains(engineer);
         if (!mBusyQueue.isEmpty()) {
-            mBusyQueue.remove(0);
-        } else if (!mNormalQueue.isEmpty()) {
-            mNormalQueue.remove(0);
+            mBusyQueue.remove(new Integer(engineer.getId()));
+        }
+        if (!mNormalQueue.isEmpty()) {
+            mNormalQueue.remove(new Integer(engineer.getId()));
         }
     }
 
     private void addToQueue(List<Integer> queue, int engineerId) {
-        for (Integer id : queue) {
-            if (id == engineerId) {
-                return;
-            }
-        }
+        assert !queue.contains(new Integer(engineerId));
         queue.add(engineerId);
     }
 
-    private void add(EngineerState engineer) {
+    public void add(EngineerState engineer) {
         assert !contains(engineer);
         if (engineer.isBusy()) {
             addToQueue(mBusyQueue, engineer.getId());
@@ -99,7 +89,13 @@ public class CoffeeQueue {
         return ids;
     }
 
-    public void doOneStep(boolean isCoffeeReady, List<EngineerState> engineers) {
+    public void doOneStep(EngineerState engineer) {
+        List<EngineerState> engineers = new ArrayList<EngineerState>();
+        engineers.add(engineer);
+        doOneStep(engineers);
+    }
+
+    public void doOneStep(List<EngineerState> engineers) {
         for (EngineerState engineer : engineers) {
             if (engineer.isQueuing()) {
                 if (contains(engineer)) {
@@ -107,12 +103,10 @@ public class CoffeeQueue {
                 } else {
                     add(engineer);
                 }
-            }
-        }
-
-        if (!isEmpty()) {
-            if (isCoffeeReady) {
-                removeNext();
+            } else if (engineer.isWorking()) {
+                if (contains(engineer)) {
+                    remove(engineer);
+                }
             }
         }
     }

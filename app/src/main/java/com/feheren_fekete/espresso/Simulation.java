@@ -23,7 +23,7 @@ public class Simulation {
     }
 
     public List<EngineerState> getEngineerStates() {
-        List<EngineerState> states = new ArrayList<EngineerState>();
+        List<EngineerState> states = new ArrayList<>();
         for (Engineer engineer : mEngineers) {
             states.add(engineer.getState());
         }
@@ -37,7 +37,7 @@ public class Simulation {
         List<EngineerState> engineerStates = getEngineerStates();
 
         mCoffeeMachine.doOneStep(isQueueEmpty);
-        mCoffeeQueue.doOneStep(isCoffeeReady, engineerStates);
+        mCoffeeQueue.doOneStep(engineerStates);
         for (Engineer engineer : mEngineers) {
             engineer.doOneStep(isCoffeeReady, nextIdInQueue);
         }
