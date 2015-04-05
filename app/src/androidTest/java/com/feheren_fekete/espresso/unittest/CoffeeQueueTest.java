@@ -63,9 +63,7 @@ public class CoffeeQueueTest extends TestCase {
         assertEquals(null, queue.getNext());
     }
 
-    public void testNextEngineerGoesToWork() {
-        int engineerId = 1;
-
+    public void testArbitraryEngineerGoesToWork() {
         // We have 2 engineers in the queue.
         CoffeeQueue queue = new CoffeeQueue();
         queue.add(new EngineerState().setId(3).setWorking(false));
@@ -76,6 +74,36 @@ public class CoffeeQueueTest extends TestCase {
         assertEquals(false, queue.isEmpty());
         assertEquals(1, queue.getIds().size());
         assertEquals(new Integer(3), queue.getNext());
+    }
+
+    public void testNextEngineerGoesToWork() {
+        // We have 2 engineers in the queue.
+        CoffeeQueue queue = new CoffeeQueue();
+        queue.add(new EngineerState().setId(3).setWorking(false));
+        queue.add(new EngineerState().setId(1).setWorking(false));
+
+        // Engineer #1 goes back to work.
+        queue.doOneStep(new EngineerState().setId(3).setWorking(true));
+        assertEquals(false, queue.isEmpty());
+        assertEquals(1, queue.getIds().size());
+        assertEquals(new Integer(1), queue.getNext());
+    }
+
+    public void testEngineerBecomesBusy() {
+        // We have 2 engineers in the queue.
+        CoffeeQueue queue = new CoffeeQueue();
+        queue.add(new EngineerState().setId(3).setWorking(false));
+        queue.add(new EngineerState().setId(1).setWorking(false));
+        queue.add(new EngineerState().setId(5).setWorking(false));
+        assertEquals(false, queue.isEmpty());
+        assertEquals(3, queue.getIds().size());
+        assertEquals(new Integer(3), queue.getNext());
+
+        // Engineer #1 goes back to work.
+        queue.doOneStep(new EngineerState().setId(1).setBusy(true));
+        assertEquals(false, queue.isEmpty());
+        assertEquals(3, queue.getIds().size());
+        assertEquals(new Integer(1), queue.getNext());
     }
 
 }
