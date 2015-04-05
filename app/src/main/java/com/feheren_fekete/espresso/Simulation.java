@@ -37,29 +37,28 @@ public class Simulation {
         List<EngineerState> engineerStates = getEngineerStates();
 
         mCoffeeMachine.doOneStep(isQueueEmpty);
+        mCoffeeQueue.doOneStep(isCoffeeReady, engineerStates);
         for (Engineer engineer : mEngineers) {
             engineer.doOneStep(isCoffeeReady, nextIdInQueue);
         }
-        mCoffeeQueue.doOneStep(isCoffeeReady, engineerStates);
 
         reportStateChanges();
-
         sleepForAWhile();
     }
 
     private void reportStateChanges() {
-        for (Engineer engineer : mEngineers) {
-            if (engineer.hasNewState()) {
-                mProgressReporter.reportStateChange(engineer.getState());
-            }
-        }
-
         if (mCoffeeMachine.hasNewState()) {
             mProgressReporter.reportStateChange(mCoffeeMachine.getState());
         }
 
         if (mCoffeeQueue.hasNewState()) {
             mProgressReporter.reportStateChange(mCoffeeQueue.getState());
+        }
+
+        for (Engineer engineer : mEngineers) {
+            if (engineer.hasNewState()) {
+                mProgressReporter.reportStateChange(engineer.getState());
+            }
         }
     }
 
