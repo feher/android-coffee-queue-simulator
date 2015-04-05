@@ -5,12 +5,20 @@ import java.util.List;
 
 public class CoffeeQueue {
 
-    private final List<Integer> mBusyQueue;
-    private final List<Integer> mNormalQueue;
+    private List<Integer> mBusyQueue;
+    private List<Integer> mNormalQueue;
 
     public CoffeeQueue() {
         mBusyQueue = new ArrayList<Integer>();
         mNormalQueue = new ArrayList<Integer>();
+    }
+
+    public void setBusyQueue(List<Integer> busyQueue) {
+        mBusyQueue = busyQueue;
+    }
+
+    public void setNormalQueue(List<Integer> busyQueue) {
+        mBusyQueue = busyQueue;
     }
 
     public boolean hasNewState() {
