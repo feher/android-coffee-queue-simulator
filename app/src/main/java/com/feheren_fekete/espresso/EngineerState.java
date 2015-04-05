@@ -7,7 +7,11 @@ public class EngineerState {
     private final int mBusyProgress;
     private final int mNeedCoffeeProgress;
 
-    public EngineerState(int id, boolean isBusy, boolean isWorking, int busyProgress, int needCoffeeProgress) {
+    public EngineerState(int id,
+                         boolean isBusy,
+                         boolean isWorking,
+                         int busyProgress,
+                         int needCoffeeProgress) {
         mId = id;
         mIsBusy = isBusy;
         mIsWorking = isWorking;
