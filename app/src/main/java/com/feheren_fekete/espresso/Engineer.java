@@ -80,6 +80,7 @@ public class Engineer {
     private void goForCoffee() {
         assert isWorking();
         mIsWorking = false;
+        mStepsUntilNeedCoffee = 0;
         mShouldReportStateChange = true;
     }
 
@@ -92,17 +93,15 @@ public class Engineer {
 
     private void doOneWorkingStep() {
         if (isBusy()) {
-            if (mBusySteps == 0) {
+            makeLessBusy();
+            if (mBusySteps <= 0) {
                 setBusy(false);
-            } else {
-                makeLessBusy();
             }
         }
-        
-        if (mStepsUntilNeedCoffee == 0) {
+
+        workAndDrinkTheCoffee();
+        if (mStepsUntilNeedCoffee <= 0) {
             goForCoffee();
-        } else {
-            workAndDrinkTheCoffee();
         }
     }
 
@@ -115,13 +114,12 @@ public class Engineer {
     }
     
     private void maybeBecomeBusy() {
-        if (mBusyCheckSteps == mSimulationParameters.busyCheckSteps) {
+        ++mBusyCheckSteps;
+        if (mBusyCheckSteps >= mSimulationParameters.busyCheckSteps) {
             mBusyCheckSteps = 0;
             if (Common.eventHappens(mSimulationParameters.busyProb)) {
                 setBusy(true);
             }
-        } else {
-            ++mBusyCheckSteps;
         }
     }
     

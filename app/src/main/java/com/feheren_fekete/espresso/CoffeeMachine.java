@@ -36,11 +36,11 @@ public class CoffeeMachine {
                 startBrewing();
             }
         } else {
-            if (mStepsUntilCoffeeReady == 0) {
+            --mStepsUntilCoffeeReady;
+            if (mStepsUntilCoffeeReady <= 0) {
+                mStepsUntilCoffeeReady = 0;
                 mIsCoffeeReady = true;
                 mIsIdle = true;
-            } else {
-                --mStepsUntilCoffeeReady;
             }
         }
     }
