@@ -49,6 +49,16 @@ public class CoffeeMachine {
         return mIsCoffeeReady;
     }
 
+    public void setCoffeeReady(boolean isCoffeeReady) {
+        mIsCoffeeReady = isCoffeeReady;
+        if (mIsCoffeeReady) {
+            mIsIdle = true;
+            mStepsUntilCoffeeReady = 0;
+        } else {
+            mStepsUntilCoffeeReady = mSimulationParameters.stepsUntilCoffeeReady;
+        }
+    }
+
     public boolean isIdle() {
         return mIsIdle;
     }

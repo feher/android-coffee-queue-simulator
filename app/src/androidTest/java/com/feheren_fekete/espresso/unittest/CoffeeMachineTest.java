@@ -16,16 +16,59 @@ public class CoffeeMachineTest extends TestCase {
         mParameters = new SimulationParameters(inputValues);
     }
 
-    public void testBrewing() {
+    public void testBrewingProcess() {
         CoffeeMachine machine = new CoffeeMachine(mParameters);
         assertEquals(true, machine.isIdle());
         assertEquals(false, machine.isCoffeeReady());
 
         machine.startBrewing();
         assertEquals(false, machine.isIdle());
-        for (int i = 0; i <= mParameters.stepsUntilCoffeeReady; ++i) {
+        assertEquals(false, machine.isCoffeeReady());
+
+        for (int i = 0; i < mParameters.stepsUntilCoffeeReady; ++i) {
+            assertEquals(false, machine.isIdle());
+            assertEquals(false, machine.isCoffeeReady());
             machine.doOneStep(true);
         }
         assertEquals(true, machine.isCoffeeReady());
+        assertEquals(true, machine.isIdle());
+    }
+
+    public void testSomebodyTakesReadyCoffee() {
+        CoffeeMachine machine = new CoffeeMachine(mParameters);
+        assertEquals(true, machine.isIdle());
+        assertEquals(false, machine.isCoffeeReady());
+
+        machine.setCoffeeReady(true);
+        assertEquals(true, machine.isIdle());
+        assertEquals(true, machine.isCoffeeReady());
+
+        machine.doOneStep(false);
+        assertEquals(true, machine.isIdle());
+        assertEquals(false, machine.isCoffeeReady());
+    }
+
+    public void testNobodyTakesReadyCoffee() {
+        CoffeeMachine machine = new CoffeeMachine(mParameters);
+        assertEquals(true, machine.isIdle());
+        assertEquals(false, machine.isCoffeeReady());
+
+        machine.setCoffeeReady(true);
+        assertEquals(true, machine.isIdle());
+        assertEquals(true, machine.isCoffeeReady());
+
+        machine.doOneStep(true);
+        assertEquals(true, machine.isIdle());
+        assertEquals(true, machine.isCoffeeReady());
+    }
+
+    public void testStartBrewingIfSomeoneWaiting() {
+        CoffeeMachine machine = new CoffeeMachine(mParameters);
+        assertEquals(true, machine.isIdle());
+        assertEquals(false, machine.isCoffeeReady());
+
+        machine.doOneStep(false);
+        assertEquals(false, machine.isIdle());
+        assertEquals(false, machine.isCoffeeReady());
     }
 }
