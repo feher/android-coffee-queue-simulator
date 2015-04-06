@@ -112,7 +112,7 @@ public class SimulationActivity
     }
 
     private void createEngineerList(int engineerCount) {
-        ArrayList<EngineerState> engineerList = new ArrayList<EngineerState>();
+        ArrayList<EngineerState> engineerList = new ArrayList<>();
         for (int i = 0; i < engineerCount; ++i) {
             engineerList.add(new EngineerState(i, false, true, 0, 0));
         }
@@ -188,7 +188,7 @@ public class SimulationActivity
     }
 
     private void updateCoffeeQueueState(CoffeeQueueState coffeeQueueState) {
-        ArrayList<EngineerState> queuingEngineerStates = new ArrayList<EngineerState>();
+        ArrayList<EngineerState> queuingEngineerStates = new ArrayList<>();
         for (Integer engineerId : coffeeQueueState.getEngineerIds()) {
             queuingEngineerStates.add(mEngineerListAdapter.getEngineerState(engineerId));
         }
