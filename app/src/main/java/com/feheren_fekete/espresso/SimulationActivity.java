@@ -184,7 +184,6 @@ public class SimulationActivity
 
     private void updateEngineerState(EngineerState engineerState) {
         mEngineerListAdapter.updateEngineerState(engineerState);
-        mCoffeeQueueAdapter.updateEngineerState(engineerState);
     }
 
     private void updateCoffeeQueueState(CoffeeQueueState coffeeQueueState) {
