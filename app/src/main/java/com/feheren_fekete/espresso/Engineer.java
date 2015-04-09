@@ -106,8 +106,8 @@ public class Engineer {
     }
 
     private void doOneQueuingStep(boolean isCoffeeReady,
-                                  Integer nextIdInQueue) {
-        assert nextIdInQueue != null;
+                                  int nextIdInQueue) {
+        assert nextIdInQueue != CoffeeQueue.INVALID_ID;
         if (isCoffeeReady && nextIdInQueue == getId()) {
             goToWork();
         }
@@ -124,7 +124,7 @@ public class Engineer {
     }
     
     public void doOneStep(boolean isCoffeeReady,
-                          Integer nextIdInQueue) {
+                          int nextIdInQueue) {
         mShouldReportStateChange = false;
 
         if (!isBusy()) {

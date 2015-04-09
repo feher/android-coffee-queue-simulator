@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoffeeQueueState {
-    private final List<Integer> mEngineerIds;
+    private final int[] mEngineerIds;
 
-    public CoffeeQueueState(List<Integer> engineerIds) {
+    public CoffeeQueueState(int[] engineerIds) {
         mEngineerIds = engineerIds;
     }
 
-    public List<Integer> getEngineerIds() {
+    public int[] getEngineerIds() {
         return mEngineerIds;
     }
 

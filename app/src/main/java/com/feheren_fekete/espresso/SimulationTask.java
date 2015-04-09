@@ -45,11 +45,10 @@ public class SimulationTask
 
     private void createSimulation(SimulationParameters parameters) {
         CoffeeMachine coffeeMachine = new CoffeeMachine(parameters);
-        CoffeeQueue coffeeQueue = new CoffeeQueue();
-        List<Engineer> engineers = new ArrayList<Engineer>();
+        CoffeeQueue coffeeQueue = new CoffeeQueue(parameters.engineerCount);
+        List<Engineer> engineers = new ArrayList<>(parameters.engineerCount);
         for (int i = 0; i < parameters.engineerCount; ++i) {
-            Engineer engineer = new Engineer(i, parameters);
-            engineers.add(engineer);
+            engineers.add(new Engineer(i, parameters));
         }
         mSimulation = new Simulation(parameters, this, coffeeMachine, coffeeQueue, engineers);
     }

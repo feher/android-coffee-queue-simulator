@@ -1,16 +1,86 @@
 package com.feheren_fekete.espresso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CoffeeQueue {
 
-    private List<Integer> mBusyQueue;
-    private List<Integer> mNormalQueue;
+    public static final int INVALID_ID = -1;
 
-    public CoffeeQueue() {
-        mBusyQueue = new ArrayList<Integer>();
-        mNormalQueue = new ArrayList<Integer>();
+    private static class IdQueue {
+        private int[] mArray;
+        private int mSize;
+
+        public IdQueue(int maxSize) {
+            mArray = new int[maxSize];
+            mSize = 0;
+        }
+
+        public void copyIds(int []destination, int offset) {
+            for (int i = 0; i < mSize; ++i) {
+                destination[offset + i] = mArray[i];
+            }
+        }
+
+        public int size() {
+            return mSize;
+        }
+
+        public void add(int item) {
+            assert mSize < mArray.length;
+            mArray[mSize] = item;
+            ++mSize;
+        }
+
+        public boolean contains(int item) {
+            for (int i = 0; i < mSize; ++i) {
+                if (mArray[i] == item) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public int get(int position) {
+            assert position < mSize;
+            return mArray[position];
+        }
+
+        public boolean isEmpty() {
+            return mSize == 0;
+        }
+
+        public int remove(int item) {
+            int removedCount = 0;
+            for (int i = 0; i < mSize; ++i) {
+                if (mArray[i] == item) {
+                    mArray[i] = INVALID_ID;
+                    ++removedCount;
+                }
+            }
+            if (removedCount > 0) {
+                int p = 0;
+                for (int i = 0; i < mSize; ++i) {
+                    if (mArray[i] != INVALID_ID) {
+                        if (i != p) {
+                            mArray[p] = mArray[i];
+                        }
+                        ++p;
+                    }
+                }
+                mSize = p;
+            }
+            return removedCount;
+        }
+    }
+
+    private IdQueue mBusyQueue;
+    private IdQueue mNormalQueue;
+
+    public CoffeeQueue(int maxCapacity) {
+        mBusyQueue = new IdQueue(maxCapacity);
+        mNormalQueue = new IdQueue(maxCapacity);
     }
 
     public boolean hasNewState() {
@@ -25,32 +95,36 @@ public class CoffeeQueue {
         return mBusyQueue.isEmpty() && mNormalQueue.isEmpty();
     }
 
+    public int length() {
+        return mBusyQueue.size() + mNormalQueue.size();
+    }
+
     private boolean contains(EngineerState engineer) {
         return mBusyQueue.contains(engineer.getId()) || mNormalQueue.contains(engineer.getId());
     }
 
-    public Integer getNext() {
+    public int getNext() {
         if (!mBusyQueue.isEmpty()) {
             return mBusyQueue.get(0);
         }
         if (!mNormalQueue.isEmpty()) {
             return mNormalQueue.get(0);
         }
-        return null;
+        return INVALID_ID;
     }
 
     private void remove(EngineerState engineer) {
         assert contains(engineer);
         if (!mBusyQueue.isEmpty()) {
-            mBusyQueue.remove(new Integer(engineer.getId()));
+            mBusyQueue.remove(engineer.getId());
         }
         if (!mNormalQueue.isEmpty()) {
-            mNormalQueue.remove(new Integer(engineer.getId()));
+            mNormalQueue.remove(engineer.getId());
         }
     }
 
-    private void addToQueue(List<Integer> queue, int engineerId) {
-        assert !queue.contains(new Integer(engineerId));
+    private void addToQueue(IdQueue queue, int engineerId) {
+        assert !queue.contains(engineerId);
         queue.add(engineerId);
     }
 
@@ -69,28 +143,29 @@ public class CoffeeQueue {
         if (engineer.isBusy()) {
             if (!mBusyQueue.contains(id)) {
                 if (mNormalQueue.contains(id)) {
-                    mNormalQueue.remove(new Integer(id));
+                    mNormalQueue.remove(id);
                 }
                 mBusyQueue.add(id);
             }
         } else {
             if (!mNormalQueue.contains(id)) {
                 if (mBusyQueue.contains(id)) {
-                    mBusyQueue.remove(new Integer(id));
+                    mBusyQueue.remove(id);
                 }
                 mNormalQueue.add(id);
             }
         }
     }
 
-    public List<Integer> getIds() {
-        List<Integer> ids = new ArrayList<Integer>(mBusyQueue);
-        ids.addAll(mNormalQueue);
+    public int[] getIds() {
+        int[] ids = new int[mBusyQueue.size() + mNormalQueue.size()];
+        mBusyQueue.copyIds(ids, 0);
+        mNormalQueue.copyIds(ids, mBusyQueue.size());
         return ids;
     }
 
     public void doOneStep(EngineerState engineer) {
-        List<EngineerState> engineers = new ArrayList<EngineerState>();
+        List<EngineerState> engineers = new ArrayList<>();
         engineers.add(engineer);
         doOneStep(engineers);
     }
