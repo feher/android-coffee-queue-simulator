@@ -10,21 +10,21 @@ public class EngineerState {
     private Data mData;
 
     private static class Data {
-        public int mId;
-        public boolean mIsBusy;
-        public boolean mIsWorking;
-        public int mBusyProgress;
-        public int mNeedCoffeeProgress;
-        public int mChangedState;
+        public int id;
+        public boolean isBusy;
+        public boolean isWorking;
+        public int busyProgress;
+        public int needCoffeeProgress;
+        public int changedState;
         public Data() {
         }
         public Data(Data other) {
-            mId = other.mId;
-            mIsBusy = other.mIsBusy;
-            mIsWorking = other.mIsWorking;
-            mBusyProgress = other.mBusyProgress;
-            mNeedCoffeeProgress = other.mNeedCoffeeProgress;
-            mChangedState = other.mChangedState;
+            id = other.id;
+            isBusy = other.isBusy;
+            isWorking = other.isWorking;
+            busyProgress = other.busyProgress;
+            needCoffeeProgress = other.needCoffeeProgress;
+            changedState = other.changedState;
         }
     }
 
@@ -34,27 +34,27 @@ public class EngineerState {
             mData = new Data();
         }
         public Builder setId(int id) {
-            mData.mId = id;
+            mData.id = id;
             return this;
         }
         public Builder setBusy(boolean isBusy) {
-            mData.mIsBusy = isBusy;
+            mData.isBusy = isBusy;
             return this;
         }
         public Builder setWorking(boolean isWorking) {
-            mData.mIsWorking = isWorking;
+            mData.isWorking = isWorking;
             return this;
         }
         public Builder setBusyProgress(int busyProgress) {
-            mData.mBusyProgress = busyProgress;
+            mData.busyProgress = busyProgress;
             return this;
         }
         public Builder setNeedCoffeeProgress(int needCoffeeProgress) {
-            mData.mNeedCoffeeProgress = needCoffeeProgress;
+            mData.needCoffeeProgress = needCoffeeProgress;
             return this;
         }
         public Builder setChangedState(int changedState) {
-            mData.mChangedState = changedState;
+            mData.changedState = changedState;
             return this;
         }
         public EngineerState build() {
@@ -72,51 +72,51 @@ public class EngineerState {
     }
 
     public boolean isStateChanged() {
-        return (mData.mChangedState != CHANGED_NOTHING);
+        return (mData.changedState != CHANGED_NOTHING);
     }
 
     public void clearChangedStates() {
-        mData.mChangedState = CHANGED_NOTHING;
+        mData.changedState = CHANGED_NOTHING;
     }
 
     public void setBusy(boolean isBusy) {
-        if (mData.mIsBusy != isBusy) {
-            mData.mChangedState |= CHANGED_IS_BUSY;
+        if (mData.isBusy != isBusy) {
+            mData.changedState |= CHANGED_IS_BUSY;
         }
-        mData.mIsBusy = isBusy;
+        mData.isBusy = isBusy;
     }
 
     public void setWorking(boolean isWorking) {
-        if (mData.mIsWorking != isWorking) {
-            mData.mChangedState |= CHANGED_IS_WORKING;
+        if (mData.isWorking != isWorking) {
+            mData.changedState |= CHANGED_IS_WORKING;
         }
-        mData.mIsWorking = isWorking;
+        mData.isWorking = isWorking;
     }
 
     public void setBusyProgress(int busyProgress) {
-        if (mData.mBusyProgress != busyProgress) {
-            mData.mChangedState |= CHANGED_BUSY_PROGRESS;
+        if (mData.busyProgress != busyProgress) {
+            mData.changedState |= CHANGED_BUSY_PROGRESS;
         }
-        mData.mBusyProgress = busyProgress;
+        mData.busyProgress = busyProgress;
     }
 
     public void setNeedCoffeeProgress(int needCoffeeProgress) {
-        if (mData.mNeedCoffeeProgress != needCoffeeProgress) {
-            mData.mChangedState |= CHANGED_NEED_COFFEE_PROGRESS;
+        if (mData.needCoffeeProgress != needCoffeeProgress) {
+            mData.changedState |= CHANGED_NEED_COFFEE_PROGRESS;
         }
-        mData.mNeedCoffeeProgress = needCoffeeProgress;
+        mData.needCoffeeProgress = needCoffeeProgress;
     }
 
     public int getId() {
-        return mData.mId;
+        return mData.id;
     }
 
     public boolean isBusy() {
-        return mData.mIsBusy;
+        return mData.isBusy;
     }
 
     public boolean isWorking() {
-        return mData.mIsWorking;
+        return mData.isWorking;
     }
 
     public boolean isQueuing() {
@@ -124,18 +124,18 @@ public class EngineerState {
     }
 
     public int getBusyProgress() {
-        return mData.mBusyProgress;
+        return mData.busyProgress;
     }
 
     public int getNeedCoffeeProgress() {
-        return mData.mNeedCoffeeProgress;
+        return mData.needCoffeeProgress;
     }
 
     @Override
     public String toString() {
-        String place = mData.mIsWorking ? "Working" : "Queuing for coffee";
-        String business = mData.mIsBusy ? "Busy" : "Not busy";
+        String place = mData.isWorking ? "Working" : "Queuing for coffee";
+        String business = mData.isBusy ? "Busy" : "Not busy";
 
-        return "Id: " + mData.mId + "\n" + place + "\n" + business;
+        return "Id: " + mData.id + "\n" + place + "\n" + business;
     }
 }
