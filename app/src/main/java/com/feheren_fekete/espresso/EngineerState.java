@@ -1,11 +1,11 @@
 package com.feheren_fekete.espresso;
 
 public class EngineerState {
-    public static int CHANGED_NOTHING = 0;
-    public static int CHANGED_IS_BUSY = 1 << 0;
-    public static int CHANGED_IS_WORKING = 1 << 1;
-    public static int CHANGED_BUSY_PROGRESS = 1 << 2;
-    public static int CHANGED_NEED_COFFEE_PROGRESS = 1 << 3;
+    private static int CHANGED_NOTHING = 0;
+    private static int CHANGED_IS_BUSY = 1 << 0;
+    private static int CHANGED_IS_WORKING = 1 << 1;
+    private static int CHANGED_BUSY_PROGRESS = 1 << 2;
+    private static int CHANGED_NEED_COFFEE_PROGRESS = 1 << 3;
 
     private Data mData;
 
