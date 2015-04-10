@@ -35,6 +35,14 @@ public class Engineer {
                         (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
                                 * 100 / mSimulationParameters.stepsUntilNeedCoffee);
 
+        if (mState.getBusyProgress() != busyProgress) {
+            mState.setChangedState(EngineerState.CHANGED_BUSY_PROGRESS);
+        }
+
+        if (mState.getNeedCoffeeProgress() != needCoffeeProgress) {
+            mState.setChangedState(EngineerState.CHANGED_NEED_COFFEE_PROGRESS);
+        }
+
         mState.setBusyProgress(busyProgress);
         mState.setNeedCoffeeProgress(needCoffeeProgress);
 
@@ -67,12 +75,10 @@ public class Engineer {
     
     private void makeLessBusy() {
         --mBusySteps;
-        mState.setChangedState(EngineerState.CHANGED_BUSY_PROGRESS);
     }
     
     private void workAndDrinkTheCoffee() {
         --mStepsUntilNeedCoffee;
-        mState.setChangedState(EngineerState.CHANGED_NEED_COFFEE_PROGRESS);
     }
 
     private void goForCoffee() {
