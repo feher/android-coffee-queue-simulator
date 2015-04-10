@@ -11,7 +11,7 @@ public class Engineer {
 
     public Engineer(int id, SimulationParameters parameters) {
         mSimulationParameters = parameters;
-        mState = new EngineerState().setId(id).setWorking(true).setBusy(false);
+        mState = new EngineerState.Builder().setId(id).setWorking(true).setBusy(false).build();
         mBusySteps = 0;
         mBusyCheckSteps = 0;
         mStepsUntilNeedCoffee = Math.round(Common.random.nextFloat() * parameters.stepsUntilNeedCoffee);
@@ -22,7 +22,7 @@ public class Engineer {
     }
 
     public boolean hasNewState() {
-        return mState.getChangedState() != EngineerState.CHANGED_NOTHING;
+        return mState.isStateChanged();
     }
 
     public EngineerState getState() {
@@ -35,19 +35,10 @@ public class Engineer {
                         (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
                                 * 100 / mSimulationParameters.stepsUntilNeedCoffee);
 
-        if (mState.getBusyProgress() != busyProgress) {
-            mState.setChangedState(EngineerState.CHANGED_BUSY_PROGRESS);
-        }
-
-        if (mState.getNeedCoffeeProgress() != needCoffeeProgress) {
-            mState.setChangedState(EngineerState.CHANGED_NEED_COFFEE_PROGRESS);
-        }
-
         mState.setBusyProgress(busyProgress);
         mState.setNeedCoffeeProgress(needCoffeeProgress);
 
-        EngineerState reportedState = new EngineerState(mState);
-        return reportedState;
+        return new EngineerState(mState);
     }
 
     public int getId() {
@@ -70,7 +61,6 @@ public class Engineer {
         assert mState.isBusy() != isBusy;
         mState.setBusy(isBusy);
         mBusySteps = mSimulationParameters.busySteps;
-        mState.setChangedState(EngineerState.CHANGED_IS_BUSY);
     }
     
     private void makeLessBusy() {
@@ -85,14 +75,12 @@ public class Engineer {
         assert isWorking();
         mState.setWorking(false);
         mStepsUntilNeedCoffee = 0;
-        mState.setChangedState(EngineerState.CHANGED_IS_WORKING);
     }
 
     private void goToWork() {
         assert isQueuing();
         mState.setWorking(true);
         mStepsUntilNeedCoffee = mSimulationParameters.stepsUntilNeedCoffee;
-        mState.setChangedState(EngineerState.CHANGED_IS_WORKING);
     }
 
     private void doOneWorkingStep() {

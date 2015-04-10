@@ -114,7 +114,8 @@ public class SimulationActivity
     private void createEngineerList(int engineerCount) {
         ArrayList<EngineerState> engineerList = new ArrayList<>(engineerCount);
         for (int i = 0; i < engineerCount; ++i) {
-            engineerList.add(new EngineerState(i, false, true, 0, 0));
+            engineerList.add(
+                    new EngineerState.Builder().setId(i).setBusy(false).setWorking(true).build());
         }
         mEngineerListAdapter = new EngineerListAdapter(this, engineerList);
         mEngineersListView.setAdapter(mEngineerListAdapter);
