@@ -1,11 +1,18 @@
 package com.feheren_fekete.espresso;
 
 public class EngineerState {
+    public static int CHANGED_NOTHING = 0;
+    public static int CHANGED_IS_BUSY = 1 << 0;
+    public static int CHANGED_IS_WORKING = 1 << 1;
+    public static int CHANGED_BUSY_PROGRESS = 1 << 2;
+    public static int CHANGED_NEED_COFFEE_PROGRESS = 1 << 3;
+
     private int mId;
     private boolean mIsBusy;
     private boolean mIsWorking;
     private int mBusyProgress;
     private int mNeedCoffeeProgress;
+    private int mChangedState;
 
     public EngineerState(int id,
                          boolean isBusy,
@@ -17,9 +24,35 @@ public class EngineerState {
         mIsWorking = isWorking;
         mBusyProgress = busyProgress;
         mNeedCoffeeProgress = needCoffeeProgress;
+        mChangedState = CHANGED_NOTHING;
+    }
+
+    public EngineerState(EngineerState other) {
+        mId = other.mId;
+        mIsBusy = other.mIsBusy;
+        mIsWorking = other.mIsWorking;
+        mBusyProgress = other.mBusyProgress;
+        mNeedCoffeeProgress = other.mNeedCoffeeProgress;
+        mChangedState = other.mChangedState;
     }
 
     public EngineerState() {
+    }
+
+    public void setChangedState(int stateFlag) {
+        mChangedState |= stateFlag;
+    }
+
+    public boolean isStateChanged(int stateFlag) {
+        return (mChangedState & stateFlag) != 0;
+    }
+
+    public void clearChangedStates() {
+        mChangedState = CHANGED_NOTHING;
+    }
+
+    public int getChangedState() {
+        return mChangedState;
     }
 
     public EngineerState setId(int id) {

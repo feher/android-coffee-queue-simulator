@@ -3,32 +3,26 @@ package com.feheren_fekete.espresso;
 import java.util.Random;
 
 public class Engineer {
-    private boolean mShouldReportStateChange;
     private SimulationParameters mSimulationParameters;
-    private int mId;
-    private boolean mIsWorking;
-    private boolean mIsBusy;
+    private EngineerState mState;
     private long mBusySteps;
     private long mBusyCheckSteps;
     private long mStepsUntilNeedCoffee;
 
     public Engineer(int id, SimulationParameters parameters) {
-        mShouldReportStateChange = false;
         mSimulationParameters = parameters;
-        mId = id;
-        mIsWorking = true;
-        mIsBusy = false;
+        mState = new EngineerState().setId(id).setWorking(true).setBusy(false);
         mBusySteps = 0;
         mBusyCheckSteps = 0;
         mStepsUntilNeedCoffee = Math.round(Common.random.nextFloat() * parameters.stepsUntilNeedCoffee);
         if (Common.eventHappens(parameters.busyProb)) {
-            mIsBusy = true;
+            mState.setBusy(true);
             mBusySteps = parameters.busySteps;
         }
     }
 
     public boolean hasNewState() {
-        return mShouldReportStateChange;
+        return mState.getChangedState() != EngineerState.CHANGED_NOTHING;
     }
 
     public EngineerState getState() {
@@ -41,19 +35,23 @@ public class Engineer {
                         (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
                                 * 100 / mSimulationParameters.stepsUntilNeedCoffee);
 
-        return new EngineerState(getId(), isBusy(), isWorking(), busyProgress, needCoffeeProgress);
+        mState.setBusyProgress(busyProgress);
+        mState.setNeedCoffeeProgress(needCoffeeProgress);
+
+        EngineerState reportedState = new EngineerState(mState);
+        return reportedState;
     }
 
     public int getId() {
-        return mId;
+        return mState.getId();
     }
 
     public boolean isBusy() {
-        return mIsBusy;
+        return mState.isBusy();
     }
 
     public boolean isWorking() {
-        return mIsWorking;
+        return mState.isWorking();
     }
 
     public boolean isQueuing() {
@@ -61,34 +59,34 @@ public class Engineer {
     }
 
     private void setBusy(boolean isBusy) {
-        assert mIsBusy != isBusy;
-        mIsBusy = isBusy;
+        assert mState.isBusy() != isBusy;
+        mState.setBusy(isBusy);
         mBusySteps = mSimulationParameters.busySteps;
-        mShouldReportStateChange = true;
+        mState.setChangedState(EngineerState.CHANGED_IS_BUSY);
     }
     
     private void makeLessBusy() {
         --mBusySteps;
-        mShouldReportStateChange = true;
+        mState.setChangedState(EngineerState.CHANGED_BUSY_PROGRESS);
     }
     
     private void workAndDrinkTheCoffee() {
         --mStepsUntilNeedCoffee;
-        mShouldReportStateChange = true;
+        mState.setChangedState(EngineerState.CHANGED_NEED_COFFEE_PROGRESS);
     }
 
     private void goForCoffee() {
         assert isWorking();
-        mIsWorking = false;
+        mState.setWorking(false);
         mStepsUntilNeedCoffee = 0;
-        mShouldReportStateChange = true;
+        mState.setChangedState(EngineerState.CHANGED_IS_WORKING);
     }
 
     private void goToWork() {
         assert isQueuing();
-        mIsWorking = true;
+        mState.setWorking(true);
         mStepsUntilNeedCoffee = mSimulationParameters.stepsUntilNeedCoffee;
-        mShouldReportStateChange = true;
+        mState.setChangedState(EngineerState.CHANGED_IS_WORKING);
     }
 
     private void doOneWorkingStep() {
@@ -125,7 +123,7 @@ public class Engineer {
     
     public void doOneStep(boolean isCoffeeReady,
                           int nextIdInQueue) {
-        mShouldReportStateChange = false;
+        mState.clearChangedStates();
 
         if (!isBusy()) {
             maybeBecomeBusy();
