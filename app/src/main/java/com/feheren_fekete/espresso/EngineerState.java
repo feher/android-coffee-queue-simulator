@@ -16,8 +16,10 @@ public class EngineerState {
         public int busyProgress;
         public int needCoffeeProgress;
         public int changedState;
+
         public Data() {
         }
+
         public Data(Data other) {
             id = other.id;
             isBusy = other.isBusy;
@@ -30,38 +32,30 @@ public class EngineerState {
 
     public static class Builder {
         private Data mData;
+
         public Builder() {
             mData = new Data();
         }
+
         public Builder setId(int id) {
             mData.id = id;
             return this;
         }
+
         public Builder setBusy(boolean isBusy) {
             mData.isBusy = isBusy;
             return this;
         }
+
         public Builder setWorking(boolean isWorking) {
             mData.isWorking = isWorking;
             return this;
         }
-        public Builder setBusyProgress(int busyProgress) {
-            mData.busyProgress = busyProgress;
-            return this;
-        }
-        public Builder setNeedCoffeeProgress(int needCoffeeProgress) {
-            mData.needCoffeeProgress = needCoffeeProgress;
-            return this;
-        }
-        public Builder setChangedState(int changedState) {
-            mData.changedState = changedState;
-            return this;
-        }
+                
         public EngineerState build() {
             return new EngineerState(mData);
         }
     }
-
 
     private EngineerState(Data data) {
         mData = data;
