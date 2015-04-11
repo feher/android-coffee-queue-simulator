@@ -76,29 +76,29 @@ public class EngineerState {
     public void setBusy(boolean isBusy) {
         if (mData.isBusy != isBusy) {
             mData.changedState |= CHANGED_IS_BUSY;
+            mData.isBusy = isBusy;
         }
-        mData.isBusy = isBusy;
     }
 
     public void setWorking(boolean isWorking) {
         if (mData.isWorking != isWorking) {
             mData.changedState |= CHANGED_IS_WORKING;
+            mData.isWorking = isWorking;
         }
-        mData.isWorking = isWorking;
     }
 
     public void setBusyProgress(int busyProgress) {
         if (mData.busyProgress != busyProgress) {
             mData.changedState |= CHANGED_BUSY_PROGRESS;
+            mData.busyProgress = busyProgress;
         }
-        mData.busyProgress = busyProgress;
     }
 
     public void setNeedCoffeeProgress(int needCoffeeProgress) {
         if (mData.needCoffeeProgress != needCoffeeProgress) {
             mData.changedState |= CHANGED_NEED_COFFEE_PROGRESS;
+            mData.needCoffeeProgress = needCoffeeProgress;
         }
-        mData.needCoffeeProgress = needCoffeeProgress;
     }
 
     public int getId() {
