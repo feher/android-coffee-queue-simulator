@@ -1,6 +1,11 @@
 package com.feheren_fekete.espresso;
 
 public class EngineerState {
+    // TODO: These are here for optimizing the ListView adapter.
+    //       The adapter should update only the changed views in
+    //       the EngineerListAdapter.getView() method.
+    //       Check this out:
+    //       http://stackoverflow.com/questions/2123083/android-listview-refresh-single-row
     private static int CHANGED_NOTHING = 0;
     private static int CHANGED_IS_BUSY = 1 << 0;
     private static int CHANGED_IS_WORKING = 1 << 1;
