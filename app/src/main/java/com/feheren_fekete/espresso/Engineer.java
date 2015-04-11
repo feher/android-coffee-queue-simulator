@@ -1,8 +1,7 @@
 package com.feheren_fekete.espresso;
 
-import java.util.Random;
-
 public class Engineer {
+    private static final int MAX_NUMBER_OF_PROGRESS_UPDATES = 10;
     private SimulationParameters mSimulationParameters;
     private EngineerState mState;
     private long mBusySteps;
@@ -26,18 +25,6 @@ public class Engineer {
     }
 
     public EngineerState getState() {
-        int busyProgress =
-                Math.round(
-                        (float)(mSimulationParameters.busySteps - mBusySteps)
-                                * 100 / mSimulationParameters.busySteps);
-        int needCoffeeProgress =
-                Math.round(
-                        (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
-                                * 100 / mSimulationParameters.stepsUntilNeedCoffee);
-
-        mState.setBusyProgress(busyProgress);
-        mState.setNeedCoffeeProgress(needCoffeeProgress);
-
         return new EngineerState(mState);
     }
 
@@ -64,11 +51,27 @@ public class Engineer {
     }
     
     private void makeLessBusy() {
-        --mBusySteps;
+        mBusySteps = Math.max(0, mBusySteps - 1);
+        int busyProgress =
+                Math.round(
+                        (float)(mSimulationParameters.busySteps - mBusySteps)
+                                * 100 / mSimulationParameters.busySteps);
+        busyProgress =
+                ((busyProgress + MAX_NUMBER_OF_PROGRESS_UPDATES)
+                        / MAX_NUMBER_OF_PROGRESS_UPDATES) * MAX_NUMBER_OF_PROGRESS_UPDATES;
+        mState.setBusyProgress(busyProgress);
     }
     
     private void workAndDrinkTheCoffee() {
-        --mStepsUntilNeedCoffee;
+        mStepsUntilNeedCoffee = Math.max(0, mStepsUntilNeedCoffee - 1);
+        int needCoffeeProgress =
+                Math.round(
+                        (float)(mSimulationParameters.stepsUntilNeedCoffee - mStepsUntilNeedCoffee)
+                                * 100 / mSimulationParameters.stepsUntilNeedCoffee);
+        needCoffeeProgress =
+                ((needCoffeeProgress + MAX_NUMBER_OF_PROGRESS_UPDATES)
+                        / MAX_NUMBER_OF_PROGRESS_UPDATES) * MAX_NUMBER_OF_PROGRESS_UPDATES;
+        mState.setNeedCoffeeProgress(needCoffeeProgress);
     }
 
     private void goForCoffee() {
