@@ -8,6 +8,10 @@ public class CoffeeQueue {
 
     public static final int INVALID_ID = -1;
 
+    private IdQueue mBusyQueue;
+    private IdQueue mNormalQueue;
+    private boolean mIsStateChanged;
+
     private static class IdQueue {
         private int[] mArray;
         private int mSize;
@@ -75,16 +79,14 @@ public class CoffeeQueue {
         }
     }
 
-    private IdQueue mBusyQueue;
-    private IdQueue mNormalQueue;
-
     public CoffeeQueue(int maxCapacity) {
         mBusyQueue = new IdQueue(maxCapacity);
         mNormalQueue = new IdQueue(maxCapacity);
+        mIsStateChanged = false;
     }
 
     public boolean hasNewState() {
-        return true;
+        return mIsStateChanged;
     }
 
     public CoffeeQueueState getState() {
@@ -116,16 +118,17 @@ public class CoffeeQueue {
     private void remove(EngineerState engineer) {
         assert contains(engineer);
         if (!mBusyQueue.isEmpty()) {
-            mBusyQueue.remove(engineer.getId());
+            mIsStateChanged |= (mBusyQueue.remove(engineer.getId()) != 0);
         }
         if (!mNormalQueue.isEmpty()) {
-            mNormalQueue.remove(engineer.getId());
+            mIsStateChanged |= (mNormalQueue.remove(engineer.getId()) != 0);
         }
     }
 
     private void addToQueue(IdQueue queue, int engineerId) {
         assert !queue.contains(engineerId);
         queue.add(engineerId);
+        mIsStateChanged = true;
     }
 
     public void add(EngineerState engineer) {
@@ -171,6 +174,7 @@ public class CoffeeQueue {
     }
 
     public void doOneStep(List<EngineerState> engineers) {
+        mIsStateChanged = false;
         for (EngineerState engineer : engineers) {
             if (engineer.isQueuing()) {
                 if (contains(engineer)) {
