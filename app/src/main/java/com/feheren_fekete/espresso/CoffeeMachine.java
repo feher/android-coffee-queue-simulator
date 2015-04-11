@@ -31,6 +31,7 @@ public class CoffeeMachine {
      }
 
     public void doOneStep(boolean isQueueEmpty) {
+        mState.clearStateChanged();
         if (mState.isCoffeeReady()) {
             if (!isQueueEmpty) {
                 takeCoffee();
