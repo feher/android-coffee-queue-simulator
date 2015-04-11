@@ -3,56 +3,60 @@ package com.feheren_fekete.espresso;
 public class CoffeeMachine {
 
     private SimulationParameters mSimulationParameters;
-    private boolean mIsIdle;
-    private boolean mIsCoffeeReady;
+    private CoffeeMachineState mState;
     private long mStepsUntilCoffeeReady;
 
     public CoffeeMachine(SimulationParameters parameters) {
         mSimulationParameters = parameters;
-        mIsIdle = true;
-        mIsCoffeeReady = false;
+        mState = new CoffeeMachineState(false, false, 0);
         mStepsUntilCoffeeReady = 0;
     }
 
     public boolean hasNewState() {
-        return true;
+        return mState.isStateChanged();
     }
 
     public CoffeeMachineState getState() {
+        return new CoffeeMachineState(mState);
+    }
+
+    private void brewTheCoffee() {
+        mStepsUntilCoffeeReady = Math.max(0, mStepsUntilCoffeeReady - 1);
         int progress =
                 Math.round(
                         (float)(mSimulationParameters.stepsUntilCoffeeReady - mStepsUntilCoffeeReady)
                                 * 100 / mSimulationParameters.stepsUntilCoffeeReady);
-        return new CoffeeMachineState(!isIdle(), isCoffeeReady(), progress);
-    }
+        progress = ((progress + 10) / 10) * 10;
+        mState.setBrewingProgress(progress);
+     }
 
     public void doOneStep(boolean isQueueEmpty) {
-        if (mIsCoffeeReady) {
+        if (mState.isCoffeeReady()) {
             if (!isQueueEmpty) {
                 takeCoffee();
             }
-        } else if (mIsIdle) {
+        } else if (!mState.isBrewing()) {
             if (!isQueueEmpty) {
                 startBrewing();
             }
         } else {
-            --mStepsUntilCoffeeReady;
+            brewTheCoffee();
             if (mStepsUntilCoffeeReady <= 0) {
                 mStepsUntilCoffeeReady = 0;
-                mIsCoffeeReady = true;
-                mIsIdle = true;
+                mState.setCoffeeReady(true);
+                mState.setBrewing(false);
             }
         }
     }
 
     public boolean isCoffeeReady() {
-        return mIsCoffeeReady;
+        return mState.isCoffeeReady();
     }
 
     public void setCoffeeReady(boolean isCoffeeReady) {
-        mIsCoffeeReady = isCoffeeReady;
-        if (mIsCoffeeReady) {
-            mIsIdle = true;
+        mState.setCoffeeReady(isCoffeeReady);
+        if (isCoffeeReady) {
+            mState.setBrewing(false);
             mStepsUntilCoffeeReady = 0;
         } else {
             mStepsUntilCoffeeReady = mSimulationParameters.stepsUntilCoffeeReady;
@@ -60,20 +64,20 @@ public class CoffeeMachine {
     }
 
     public boolean isIdle() {
-        return mIsIdle;
+        return !mState.isBrewing();
     }
 
     public void takeCoffee() {
-        assert mIsCoffeeReady;
-        mIsIdle = true;
-        mIsCoffeeReady = false;
+        assert mState.isCoffeeReady();
+        mState.setBrewing(false);
+        mState.setCoffeeReady(false);
         mStepsUntilCoffeeReady = 0;
     }
 
     public void startBrewing() {
-        assert mIsIdle;
-        mIsIdle = false;
-        mIsCoffeeReady = false;
+        assert !mState.isBrewing();
+        mState.setBrewing(true);
+        mState.setCoffeeReady(false);
         mStepsUntilCoffeeReady = mSimulationParameters.stepsUntilCoffeeReady;
     }
 }

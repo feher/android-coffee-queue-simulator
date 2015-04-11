@@ -1,14 +1,27 @@
 package com.feheren_fekete.espresso;
 
 public class CoffeeMachineState {
-    private final boolean mIsBrewing;
-    private final boolean mIsCoffeeReady;
-    private final int mBrewingProgress;
+    private boolean mIsBrewing;
+    private boolean mIsCoffeeReady;
+    private int mBrewingProgress;
+    private boolean mIsStateChanged;
 
     public CoffeeMachineState(boolean isBrewing, boolean isCoffeeReady, int brewingProgress) {
         mIsBrewing = isBrewing;
         mIsCoffeeReady = isCoffeeReady;
         mBrewingProgress = brewingProgress;
+        mIsStateChanged = false;
+    }
+
+    public CoffeeMachineState(CoffeeMachineState other) {
+        mIsBrewing = other.mIsBrewing;
+        mIsCoffeeReady = other.mIsCoffeeReady;
+        mBrewingProgress = other.mBrewingProgress;
+        mIsStateChanged = other.mIsStateChanged;
+    }
+
+    public boolean isStateChanged() {
+        return mIsStateChanged;
     }
 
     public boolean isBrewing() {
@@ -21,5 +34,30 @@ public class CoffeeMachineState {
 
     public int getBrewingProgress() {
         return mBrewingProgress;
+    }
+
+    public void clearStateChanged() {
+        mIsStateChanged = false;
+    }
+
+    public void setBrewing(boolean isBrewing) {
+        if (mIsBrewing != isBrewing) {
+            mIsBrewing = isBrewing;
+            mIsStateChanged = true;
+        }
+    }
+
+    public void setCoffeeReady(boolean isCoffeeReady) {
+        if (mIsCoffeeReady != isCoffeeReady) {
+            mIsCoffeeReady = isCoffeeReady;
+            mIsStateChanged = true;
+        }
+    }
+
+    public void setBrewingProgress(int brewingProgress) {
+        if (mBrewingProgress != brewingProgress) {
+            mBrewingProgress = brewingProgress;
+            mIsStateChanged = true;
+        }
     }
 }
