@@ -117,7 +117,7 @@ public class Engineer {
     
     public void doOneStep(boolean isCoffeeReady,
                           int nextIdInQueue) {
-        mState.clearChangedStates();
+        mState.clearStateChanged();
 
         if (!isBusy()) {
             maybeBecomeBusy();

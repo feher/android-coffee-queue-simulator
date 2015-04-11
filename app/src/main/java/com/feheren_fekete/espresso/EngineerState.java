@@ -51,7 +51,7 @@ public class EngineerState {
             mData.isWorking = isWorking;
             return this;
         }
-                
+
         public EngineerState build() {
             return new EngineerState(mData);
         }
@@ -69,7 +69,7 @@ public class EngineerState {
         return (mData.changedState != CHANGED_NOTHING);
     }
 
-    public void clearChangedStates() {
+    public void clearStateChanged() {
         mData.changedState = CHANGED_NOTHING;
     }
 
