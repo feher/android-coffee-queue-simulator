@@ -124,12 +124,4 @@ public class EngineerState {
     public int getNeedCoffeeProgress() {
         return mData.needCoffeeProgress;
     }
-
-    @Override
-    public String toString() {
-        String place = mData.isWorking ? "Working" : "Queuing for coffee";
-        String business = mData.isBusy ? "Busy" : "Not busy";
-
-        return "Id: " + mData.id + "\n" + place + "\n" + business;
-    }
 }
